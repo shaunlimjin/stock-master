@@ -121,7 +121,7 @@ public class SGXWebMarketDataImpl extends MarketData {
 				// if stock already exist, update prices only
 				if (marketData.containsKey(stockCode)) {
 					Log.debug(this, stockCode
-							+ " already exist. Retrieving record..");
+							+ " already exist. Retrieving record...");
 					stock = marketData.get(stockCode);
 					stock.clearFieldChangedList(); // we will be re-populating
 													// updated field list
