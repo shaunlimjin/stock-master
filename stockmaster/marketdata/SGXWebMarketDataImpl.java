@@ -81,7 +81,7 @@ public class SGXWebMarketDataImpl extends MarketData {
 	 * volume ((JavascriptExecutor)
 	 * driver).executeScript("doTops('VL', true, 7, 'Top 20 Vol')");
 	 * populateData(); } catch (TimeoutException e) {
-	 * Log.info(this,"Timeout. Reloading "+url); driver.quit(); init(); } }
+	 * Log.info(this,"Timeout! Reloading "+url); driver.quit(); init(); } }
 	 */
 
 	public void populateData() {
