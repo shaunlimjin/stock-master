@@ -18,7 +18,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 	public static final int PRICE_TIME_UNIT_QUEUE_SIZE = 10;
 	
 	// Time to trigger algorithm - in millis
-	public static final long TIME_PERIOD = 6*60*1000;
+	public static final long TIME_PERIOD = 7*60*1000;
 	// Price increase to trigger algorithm - in percentage
 	public static final float PRICE_INCREASE = 2;
 	// Price decrease to trigger algorithm - in percentage
@@ -40,17 +40,17 @@ public class RideTheTideImpl extends TradingAlgorithm {
 			
 			// Retrieve price history of a stock
 			LinkedList<PriceTimeUnit> priceHistoryList = stockUnit.getPriceHistoryList();
-			Log.debug(this, "Analyzing StockCode: "+stockUnit.getStockData().getStockCode()+" Size: "+priceHistoryList.size()+" ("+System.currentTimeMillis()+" - "+startTime+")");
+			Log.info(this, "Analyzing StockCode: "+stockUnit.getStockData().getStockCode()+" Size: "+priceHistoryList.size()+" ("+System.currentTimeMillis()+" - "+startTime+")");
 			
 			// Check if price has increased by x% in y time
 			for (PriceTimeUnit unit : priceHistoryList) {
-				Log.debug(this, "Time/Price: "+unit.time+"/"+unit.price);
+				Log.info(this, "Time/Price: "+unit.time+"/"+unit.price);
 				
 				// Check what is the current time vs the last recorded time
 				if (startTime < unit.time) {
 					// compare current price with startTime price - check if it exceeds x%
 					float percentageChange = 100*(priceHistoryList.getFirst().price-unit.price) / unit.price;	
-					Log.debug(this, "Percentage Change: "+percentageChange +" (Current Price: "+priceHistoryList.getFirst().price+ " Start Price: "+unit.price+")");	
+					Log.info(this, "Percentage Change: "+percentageChange +" (Current Price: "+priceHistoryList.getFirst().price+ " Start Price: "+unit.price+")");	
 					
 					// decide whether or not to BUY - stock must increase by x% over specified time	
 					if ((percentageChange >= PRICE_INCREASE) && (stockUnit.position == 0)) {
@@ -71,7 +71,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 	public void stockChange(StockData stockData) {
 		String stockCode = stockData.getStockCode();
 		
-		Log.debug(this, stockCode+": Stock data changed!");
+		Log.info(this, stockCode+": Stock data changed!");
 		
 		if (Log.logLevel == Log.LogLevel.DEBUG)
 			stockData.displayFieldChanges();
@@ -88,7 +88,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 			}
 		
 			stockUnit.addInPriceList(stockData.getLastPrice());
-			
+
 			// analyze whether stock meets our triggers
 			analyze(stockUnit);
 		}

@@ -33,6 +33,9 @@ public class Log {
 		String timestamp = Log.df.format(new Date());
 		System.out.println("[" + level + "/"+timestamp+"] " + obj.getClass().getName()
 				+ " - " + msg);
+		
+		write("[" + level + "/"+timestamp+"] " + obj.getClass().getName()
+				+ " - " + msg);
 	}
 
 	public static void setLogFilename(String filename) {

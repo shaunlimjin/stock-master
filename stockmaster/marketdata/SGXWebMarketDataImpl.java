@@ -81,7 +81,7 @@ public class SGXWebMarketDataImpl extends MarketData {
 	 * volume ((JavascriptExecutor)
 	 * driver).executeScript("doTops('VL', true, 7, 'Top 20 Vol')");
 	 * populateData(); } catch (TimeoutException e) {
-	 * Log.info(this,"Timeout! Reloading "+url); driver.quit(); init(); } }
+	 * Log.info(this,"Timeout. Reloading "+url); driver.quit(); init(); } }
 	 */
 
 	public void populateData() {
@@ -121,7 +121,7 @@ public class SGXWebMarketDataImpl extends MarketData {
 				// if stock already exist, update prices only
 				if (marketData.containsKey(stockCode)) {
 					Log.debug(this, stockCode
-							+ " already exist. Retrieving record...");
+							+ " already exist. Retrieving record..");
 					stock = marketData.get(stockCode);
 					stock.clearFieldChangedList(); // we will be re-populating
 													// updated field list
@@ -482,7 +482,7 @@ public class SGXWebMarketDataImpl extends MarketData {
 	 * 
 	 * Log.debug(this, "Done parsing. - " + (System.currentTimeMillis() -
 	 * timestamp) + "ms"); timestamp = System.currentTimeMillis(); } catch
-	 * (TimeoutException e) { Log.info(this,"Timeout! Repopulating data..");
+	 * (TimeoutException e) { Log.info(this,"Timeout. Repopulating data..");
 	 * populateData(); }
 	 * 
 	 * }
@@ -494,10 +494,5 @@ public class SGXWebMarketDataImpl extends MarketData {
 		// ((JavascriptExecutor)
 		// driver).executeScript("doTops('P', true, 6, 'Top 20 %Gainers')");
 		populateData();
-	}
-
-	@Override
-	public void event() {
-		refresh();
 	}
 }

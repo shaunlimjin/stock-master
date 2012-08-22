@@ -45,8 +45,10 @@ public abstract class MarketData {
 	public abstract void refresh();	
 	
 	// This method is called by a thread every x seconds. 
-	// Use this method to perform routine work (e.g. call refresh())
-	public abstract void event();
+	// Override this method to perform routine work / tap into the thread
+	public void event() {
+		refresh();
+	}
 	
 	// This method is called to initialize the object upon creation.
 	public abstract void init();
