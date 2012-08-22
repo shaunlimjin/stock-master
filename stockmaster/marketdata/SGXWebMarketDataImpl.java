@@ -482,7 +482,7 @@ public class SGXWebMarketDataImpl extends MarketData {
 	 * 
 	 * Log.debug(this, "Done parsing. - " + (System.currentTimeMillis() -
 	 * timestamp) + "ms"); timestamp = System.currentTimeMillis(); } catch
-	 * (TimeoutException e) { Log.info(this,"Timeout. Repopulating data..");
+	 * (TimeoutException e) { Log.info(this,"Timeout! Repopulating data..");
 	 * populateData(); }
 	 * 
 	 * }
