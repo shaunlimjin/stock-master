@@ -9,7 +9,7 @@ public class CSVFileRecorderImpl extends DataRecorder {
 
 	private String path, marketName;
 	private File file;
-	private static FileWriter writer;
+	private FileWriter writer;
 	
 	public CSVFileRecorderImpl(String filePath, String market)  {
 		path = filePath;

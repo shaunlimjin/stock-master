@@ -83,5 +83,12 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 		}
 
 	}
+	
+	@Override
+	public void start(){
+		Log.debug(this, "Starting market data..");
+		init();
+		populateData();
+	}
 
 }
