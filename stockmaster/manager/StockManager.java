@@ -4,7 +4,7 @@ import stockmaster.algo.RideTheTideImpl;
 import stockmaster.algo.TradingAlgorithm;
 import stockmaster.marketdata.MarketData;
 import stockmaster.marketdata.SGXWebMarketDataImpl;
-import stockmaster.marketdata.RPLSGXWebMarketDataImpl;
+import stockmaster.marketdata.ReplayCSVMarketDataImpl;
 import stockmaster.recorder.DataRecorder;
 import stockmaster.recorder.CSVFileRecorderImpl;
 import stockmaster.util.Log;
@@ -46,7 +46,7 @@ public class StockManager {
 		//StockManager stockManager = new StockManager(new SGXWebMarketDataImpl());
 		
 		// Starts the application using Replayer SGX Web Market Data 
-		StockManager stockManager = new StockManager(new RPLSGXWebMarketDataImpl("FeedData\\","20120824","SGX"));
+		StockManager stockManager = new StockManager(new ReplayCSVMarketDataImpl("FeedData\\","20120824","SGX"));
 		
 		// Define algorithm stock manager would use to monitor the market
 		stockManager.loadAlgo(new RideTheTideImpl(stockManager));
