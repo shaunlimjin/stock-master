@@ -16,7 +16,7 @@ public class Log {
 			"yyyy.MM.dd  hh:mm:ss ");
 
 	public enum LogLevel {
-		NONE, INFO, DEBUG
+		NONE, INFO, DEBUG, ERROR
 	}
 
 	public static void debug(Object obj, String msg) {
@@ -27,6 +27,11 @@ public class Log {
 	public static void info(Object obj, String debug) {
 		if ((logLevel == LogLevel.INFO) || (logLevel == LogLevel.DEBUG))
 			msg(obj, debug, "INFO");
+	}
+	
+	public static void error(Object obj, String debug) {
+		if (logLevel != LogLevel.NONE)
+			msg(obj, debug, "ERROR");
 	}
 
 	private static void msg(Object obj, String msg, String level) {

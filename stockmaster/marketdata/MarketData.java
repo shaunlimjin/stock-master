@@ -2,6 +2,11 @@ package stockmaster.marketdata;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import stockmaster.unit.StockData;
 import stockmaster.util.Log;
@@ -13,7 +18,11 @@ import stockmaster.util.Log;
  */
 public abstract class MarketData {
 
+	// Value in ms
 	public static final int DEFAULT_REFRESH_TIME = 30000;
+	
+	// Value in ms. When event() is called, the default timeout value is -1 (never timeout)
+	public static final int DEFAULT_EVENT_TIMEOUT = 10000; 
 	
 	/// Worker thread to continuously perform events defined by its child classes
 	protected WorkerThread workerThread;
@@ -25,13 +34,13 @@ public abstract class MarketData {
 	private ArrayList<MarketDataSubscriber> subscriptionList;
 	
 	public MarketData() {
-		this(DEFAULT_REFRESH_TIME);
+		this(DEFAULT_REFRESH_TIME, DEFAULT_EVENT_TIMEOUT);
 	}
 	
-	public MarketData(int refreshTime) {
+	public MarketData(int refreshTime, int eventTimeout) {
 		subscriptionList = new ArrayList<MarketDataSubscriber>();
 		marketData = new Hashtable<String, StockData>();
-		workerThread = new WorkerThread(refreshTime);	
+		workerThread = new WorkerThread(refreshTime, eventTimeout);	
 	}
 	
 	// Populate hashtable of stocks with latest prices
@@ -92,10 +101,25 @@ public abstract class MarketData {
 	class WorkerThread extends Thread {
 		
 		private boolean isRunning;
-		int sleepTime;
 		
-		public WorkerThread(int sleepTime) {
+		// Create an ExecutorService to manage timeout of event tasks.
+		private ExecutorService executor;
+		
+		// Create a class for managing thread timeout
+		private Runnable marketDataEvent = new Runnable() {
+			public void run() {
+				MarketData.this.event();
+			}
+		};
+		
+		int sleepTime;
+		int eventTimeout;
+		
+		public WorkerThread(int sleepTime, int eventTimeout) {
+			executor = Executors.newCachedThreadPool();
+			
 			this.sleepTime = sleepTime;
+			this.eventTimeout = eventTimeout;
 		}
 		
 		public void run() {
@@ -104,10 +128,10 @@ public abstract class MarketData {
 			Log.debug(this, "Thread started.");
 			
 			while (isRunning) {
-				MarketData.this.event();
 				
+				doWorkWithTimeout(eventTimeout);
 				try {
-					Log.debug(this, "Going to sleep for "+sleepTime+"ms");
+					Log.info(this, "Going to sleep for "+sleepTime+"ms");
 					Thread.sleep(sleepTime);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -119,6 +143,37 @@ public abstract class MarketData {
 		
 		public void stopWorker() {
 			isRunning = false;
+		}
+		
+		public void doWorkWithTimeout(int timeout) {
+			Future<?> future = null;
+			
+			try {
+				future = executor.submit(marketDataEvent);
+				
+				if (timeout == -1) // wait indefinitely for marketDataEvent to complete
+					future.get();
+				else // wait for x seconds for marketDataEvent to complete
+					future.get(timeout, TimeUnit.MILLISECONDS);
+			}
+			catch (TimeoutException e) {
+				if (future != null)
+					future.cancel(true); // clean up thread
+			
+				Log.error(this, "event() method timeout ("+timeout+"ms). Relaunching thread.");
+				doWorkWithTimeout(timeout);
+			}
+			catch (Exception e) {
+				if (future != null)
+					future.cancel(true); // clean up thread
+				
+				Log.error(this, "Unknown exception.");
+				e.printStackTrace();
+			}
+			finally {
+				if (future != null)
+					future.cancel(true); // clean up thread
+			}
 		}
 	}
 }

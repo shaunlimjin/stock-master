@@ -15,6 +15,9 @@ import stockmaster.util.Log.LogLevel;
  */
 public class StockManager {
 	
+	// set debug level
+	public static final LogLevel LOG_LEVEL = LogLevel.INFO;
+	
 	private MarketData marketData;
 	private TradingAlgorithm algo;
 	private DataRecorder recorder;
@@ -40,13 +43,11 @@ public class StockManager {
 	}
 	
 	public static void main(String[] args) {
-		Log.logLevel = LogLevel.NONE;
-		
 		// Starts the application using SGX Web Market Data 
-		//StockManager stockManager = new StockManager(new SGXWebMarketDataImpl());
+		StockManager stockManager = new StockManager(new SGXWebMarketDataImpl());
 		
 		// Starts the application using Replayer SGX Web Market Data 
-		StockManager stockManager = new StockManager(new ReplayCSVMarketDataImpl("FeedData\\","20120824","SGX"));
+		//StockManager stockManager = new StockManager(new ReplayCSVMarketDataImpl("FeedData\\","20120824","SGX"));
 		
 		// Define algorithm stock manager would use to monitor the market
 		stockManager.loadAlgo(new RideTheTideImpl(stockManager));

@@ -20,9 +20,8 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 		selectedFolder = folder;
 	}
 
-	public ReplayCSVMarketDataImpl(int refreshTime) {
-		super(refreshTime);
-		// TODO Auto-generated constructor stub
+	public ReplayCSVMarketDataImpl() {
+		super();
 	}
 
 	@Override
