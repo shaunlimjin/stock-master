@@ -21,7 +21,7 @@ public abstract class MarketData {
 	// Value in ms
 	public static final int DEFAULT_REFRESH_TIME = 30000;
 	
-	// Value in ms. When event() is called, the default timeout value is -1 (never timeout)
+	// Value in ms. Set as -1 to never timeout.
 	public static final int DEFAULT_EVENT_TIMEOUT = 10000; 
 	
 	/// Worker thread to continuously perform events defined by its child classes
@@ -151,7 +151,7 @@ public abstract class MarketData {
 			try {
 				future = executor.submit(marketDataEvent);
 				
-				if (timeout == -1) // wait indefinitely for marketDataEvent to complete
+				if (timeout < 0) // wait indefinitely for marketDataEvent to complete
 					future.get();
 				else // wait for x seconds for marketDataEvent to complete
 					future.get(timeout, TimeUnit.MILLISECONDS);
