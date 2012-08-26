@@ -43,6 +43,9 @@ public class StockManager {
 	}
 	
 	public static void main(String[] args) {
+		Log.logLevel = LOG_LEVEL;
+		System.out.println("Starting StockManager in "+Log.logLevel+" mode.");
+		
 		// Starts the application using SGX Web Market Data 
 		StockManager stockManager = new StockManager(new SGXWebMarketDataImpl());
 		

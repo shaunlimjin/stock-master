@@ -17,7 +17,7 @@ import stockmaster.util.Log;
  */
 public class SGXWebMarketDataImpl extends MarketData {
 
-	public static final int EVENT_TIMEOUT = 8000;
+	public static final int EVENT_TIMEOUT = 10000;
 	public static final int REFRESH_TIME = 30000;
 	
 	private URL jsonURL;
