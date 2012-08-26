@@ -2,7 +2,6 @@ package stockmaster.marketdata;
 
 import stockmaster.unit.StockData;
 import stockmaster.util.Log;
-import sun.util.logging.resources.logging;
 
 import java.io.*;
 
@@ -40,8 +39,7 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 					stockData.setStockName(itemList[12]);
 			
 					//Log.debug(this, stockData.toString());
-					marketData.put(stockData.getStockCode(), stockData);
-																
+					marketData.put(stockData.getStockCode(), stockData);															
 				}
 				
 				

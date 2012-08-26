@@ -164,9 +164,6 @@ public abstract class MarketData {
 				doWorkWithTimeout(timeout);
 			}
 			catch (Exception e) {
-				if (future != null)
-					future.cancel(true); // clean up thread
-				
 				Log.error(this, "Unknown exception.");
 				e.printStackTrace();
 			}
