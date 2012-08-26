@@ -29,33 +29,123 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 	public void populateData() {
 		int i=0;
 		StockData stockData;
+		float floatValue;
 		try {
-			while((line = reader.readLine())!=null){
-				stockData = new StockData();
+			while((line = reader.readLine())!=null){			
+				
 				itemList = line.split(",");
-		
-					stockData.setBuyPrice(Float.parseFloat(itemList[0]));
-					stockData.setBuyVolume(Float.parseFloat(itemList[1]));
-					stockData.setHighPrice(Float.parseFloat(itemList[2]));
-					stockData.setLastPrice(Float.parseFloat(itemList[3]));
-					stockData.setLowPrice(Float.parseFloat(itemList[4]));
-					stockData.setOpenPrice(Float.parseFloat(itemList[5]));
-					stockData.setPercentChange(Float.parseFloat(itemList[6]));
-					stockData.setRemarks(itemList[7]);
-					stockData.setSector(itemList[8]);
-					stockData.setSellPrice(Float.parseFloat(itemList[9]));
-					stockData.setSellVolume(Float.parseFloat(itemList[10]));
+				if(!marketData.containsKey(itemList[11])){
+					
+					stockData = new StockData();
 					stockData.setStockCode(itemList[11]);
 					stockData.setStockName(itemList[12]);
-					stockData.setValue(Float.parseFloat(itemList[13]));
-					stockData.setValueChange(Float.parseFloat(itemList[14]));
-					stockData.setVolume(Float.parseFloat(itemList[15]));
-					
-					Log.debug(this, stockData.toString());
-					stockChange(stockData);													
 			
-				i++;
+					//Log.debug(this, stockData.toString());
+					marketData.put(stockData.getStockCode(), stockData);
+																
+				}
 				
+				
+					stockData = marketData.get(itemList[11]);
+					stockData.clearFieldChangedList();
+					
+					floatValue = Float.parseFloat(itemList[0]);
+
+					if(stockData.getBuyPrice()!=floatValue){
+						stockData.setBuyPrice(floatValue);
+					}
+					
+					floatValue = Float.parseFloat(itemList[1]);
+					
+					if(stockData.getBuyVolume()!=floatValue){
+						stockData.setBuyVolume(floatValue);
+					}
+					
+
+					floatValue = Float.parseFloat(itemList[2]);
+					
+					if(stockData.getHighPrice()!=floatValue){
+						stockData.setHighPrice(floatValue);
+					}
+					
+
+					floatValue = Float.parseFloat(itemList[3]);
+					
+					if(stockData.getLastPrice()!=floatValue){
+						stockData.setLastPrice(floatValue);
+					}
+					
+
+					floatValue = Float.parseFloat(itemList[4]);
+					
+					if(stockData.getLowPrice()!=floatValue){
+						stockData.setLowPrice(floatValue);
+					}
+					
+					floatValue = Float.parseFloat(itemList[5]);
+					
+					if(stockData.getOpenPrice()!=floatValue){
+						stockData.setOpenPrice(floatValue);
+					}
+					
+	
+					floatValue = Float.parseFloat(itemList[6]);
+					
+					if(stockData.getPercentChange()!=floatValue){
+						stockData.setPercentChange(floatValue);
+					}
+					
+					
+					if(stockData.getRemarks()!= itemList[7]){
+						stockData.setRemarks(itemList[7]);
+					}
+					
+					
+					if(stockData.getSector()!= itemList[8]){
+						stockData.setSector(itemList[8]);
+					}
+					
+
+					floatValue = Float.parseFloat(itemList[9]);
+					
+					if(stockData.getSellPrice()!=floatValue){
+						stockData.setSellPrice(floatValue);
+					}
+					
+
+					floatValue = Float.parseFloat(itemList[10]);
+					
+					if(stockData.getSellVolume()!=floatValue){
+						stockData.setSellVolume(floatValue);
+					}
+					
+					
+
+					floatValue = Float.parseFloat(itemList[13]);
+					
+					if(stockData.getValue()!=floatValue){
+						stockData.setValue(floatValue);
+					}
+					
+
+					floatValue = Float.parseFloat(itemList[14]);
+					
+					if(stockData.getValueChange()!=floatValue){
+						stockData.setValueChange(floatValue);
+					}
+					
+
+					floatValue = Float.parseFloat(itemList[15]);
+					
+					if(stockData.getVolume()!=floatValue){
+						stockData.setVolume(floatValue);
+					}
+					
+					stockChange(stockData);
+				
+				
+				
+				i++;
 			}
 			Log.debug(this, "Total stock parsed : " + Integer.toString(i));
 		} catch (Exception e) {
