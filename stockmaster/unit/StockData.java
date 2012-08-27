@@ -28,6 +28,8 @@ public class StockData {
 	private String sector;
 	private String stockName;
 	private String stockCode;
+	private float sentiment;
+	private float sentimentWeight;
 	
 	// indicates which field was last updated
     @Transient //don't persist
@@ -54,6 +56,8 @@ public class StockData {
 	
 	public StockData() {
 		fieldChangedList = new ArrayList<FieldChanged>();
+		setSentiment(0);
+		setSentimentWeight(1);
 	}
 	
 	
@@ -230,6 +234,26 @@ public class StockData {
 		fieldChangedList.add(FieldChanged.REMARKS);
 	}
 	
+	public float getSentiment() {
+		return sentiment;
+	}
+
+
+	public void setSentiment(float sentiment) {
+		this.sentiment = sentiment;
+	}
+
+
+	public float getSentimentWeight() {
+		return sentimentWeight;
+	}
+
+
+	public void setSentimentWeight(float sentimentWeight) {
+		this.sentimentWeight = sentimentWeight;
+	}
+
+
 	public void displayFieldChanges() {
 		System.out.println(stockCode+" Field Changes: ");
 		for (FieldChanged changed : fieldChangedList)

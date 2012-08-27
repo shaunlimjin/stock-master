@@ -1,6 +1,8 @@
 package stockmaster.marketdata;
 
+import java.io.Console;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,7 +24,7 @@ public abstract class MarketData {
 	public static final int DEFAULT_REFRESH_TIME = 30000;
 	
 	// Value in ms. Set as -1 to never timeout.
-	public static final int DEFAULT_EVENT_TIMEOUT = 10000; 
+	public static final int DEFAULT_EVENT_TIMEOUT = 30000; 
 	
 	/// Worker thread to continuously perform events defined by its child classes
 	protected WorkerThread workerThread;
@@ -33,6 +35,12 @@ public abstract class MarketData {
 	// List of subscribers (typically algorithms) that are interested in being informed of stock changes.
 	private ArrayList<MarketDataSubscriber> subscriptionList;
 	
+	//Sentiment value of the entire market
+	private float overallSentiment;
+	
+	//Sentiment values of the individual counters
+	private Hashtable<String, Float> marketSentiment;
+	
 	public MarketData() {
 		this(DEFAULT_REFRESH_TIME, DEFAULT_EVENT_TIMEOUT);
 	}
@@ -41,6 +49,10 @@ public abstract class MarketData {
 		subscriptionList = new ArrayList<MarketDataSubscriber>();
 		marketData = new Hashtable<String, StockData>();
 		workerThread = new WorkerThread(refreshTime, eventTimeout);	
+		marketSentiment = new Hashtable<String, Float>();
+		setOverallSentiment(0);
+		marketSentiment.clear();
+		
 	}
 	
 	// Populate hashtable of stocks with latest prices
@@ -48,6 +60,53 @@ public abstract class MarketData {
 
 	public Hashtable<String,StockData> getMarketData() {
 		return marketData;
+	}
+	
+	public Hashtable<String, Float> getMarketSentiment() {
+		return marketSentiment;
+	}
+
+	// retrieve market sentiment
+	public float getOverallSentiment() {
+		return overallSentiment;
+	}
+
+	public void setOverallSentiment(float f) {
+		this.overallSentiment = f;
+	}
+	
+	public void resetSentiment(){
+		setOverallSentiment(0);
+		marketSentiment.clear();
+	}
+	
+	public void calculateSentiment(){
+			
+		for(String e:marketData.keySet()){		
+			StockData data = marketData.get(e);
+			
+			if(marketSentiment.containsKey(e)){
+				float value = marketSentiment.get(e);
+					Log.debug(this, "Old Price :" + String.valueOf(value));
+					Log.debug(this, "New Price :" + String.valueOf(data.getLastPrice()));
+				if(data.getLastPrice()>value){
+				    setOverallSentiment(getOverallSentiment()+data.getSentimentWeight());
+				    data.setSentiment(data.getSentiment() + 1);
+				}else if(data.getLastPrice()<value){
+					setOverallSentiment(getOverallSentiment()-data.getSentimentWeight());
+					data.setSentiment(data.getSentiment() - 1);
+				}
+											
+				marketSentiment.put(e, data.getLastPrice());
+				Log.debug(this, data.getStockCode() + " Sentiment : " + String.valueOf(data.getSentiment()));
+			}
+			else{
+			
+				marketSentiment.put(data.getStockCode(),data.getLastPrice());
+			
+			}
+		}
+	
 	}
 
 	// Logic to retrieve latest prices
@@ -57,6 +116,8 @@ public abstract class MarketData {
 	// Override this method to perform routine work / tap into the thread
 	public void event() {
 		refresh();
+		calculateSentiment();
+		Log.info(this, "Current market sentiment is : " + getOverallSentiment());
 	}
 	
 	// This method is called to initialize the object upon creation.
