@@ -7,6 +7,7 @@ import stockmaster.marketdata.SGXWebMarketDataImpl;
 import stockmaster.marketdata.ReplayCSVMarketDataImpl;
 import stockmaster.recorder.DataRecorder;
 import stockmaster.recorder.CSVFileRecorderImpl;
+import stockmaster.recorder.MongoRecorderImpl;
 import stockmaster.util.Log;
 import stockmaster.util.Log.LogLevel;
 
@@ -57,5 +58,6 @@ public class StockManager {
 		
 		//Define recorder to use with marketData
 		//stockManager.loadRecorder(new CSVFileRecorderImpl("", "SGX"));
+        stockManager.loadRecorder(new MongoRecorderImpl("sgx"));
 	}
 }

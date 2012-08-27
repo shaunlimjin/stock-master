@@ -1,10 +1,17 @@
 package stockmaster.unit;
 
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Transient;
+
 import java.util.ArrayList;
 
 /*
- * Entity class to store Stock details
+ * Entity class to store Stock details.
+ * Annotations used are Morphia's for persistence/retrieval from MongoDB.
  */
+
+//This entity will be stored in a collection in MongoDB named "stocks", and the class name will not be stored
+@Entity(value="stocks", noClassnameStored=true)
 public class StockData {
 	private float valueChange;
 	private float percentChange;
@@ -23,8 +30,9 @@ public class StockData {
 	private String stockCode;
 	
 	// indicates which field was last updated
+    @Transient //don't persist
 	private ArrayList<FieldChanged> fieldChangedList;
-	
+
 	public static enum FieldChanged {
 		BUY_PRICE,
 		SELL_PRICE,

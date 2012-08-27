@@ -32,6 +32,7 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 			while((line = reader.readLine())!=null){			
 				
 				itemList = line.split(",");
+                //if stock does not already exist in marketData's hashtable, put it there.
 				if(!marketData.containsKey(itemList[11])){
 					
 					stockData = new StockData();
