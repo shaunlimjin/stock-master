@@ -139,7 +139,11 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 						stockData.setVolume(floatValue);
 					}
 					
-					stockChange(stockData);
+					if (stockData.wasUpdated()) { // inform subscribers that stock
+						// has updated fields
+						Log.info(this, "Stock updated "+stockData.getStockName()+" ("+stockData.getStockCode()+")! Notifying subscribers.");
+						stockChange(stockData);
+					}
 				
 				
 				
