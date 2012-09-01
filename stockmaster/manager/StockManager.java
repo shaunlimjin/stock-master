@@ -1,5 +1,7 @@
 package stockmaster.manager;
 
+import java.util.ArrayList;
+
 import stockmaster.algo.RideTheTideImpl;
 import stockmaster.algo.TradingAlgorithm;
 import stockmaster.marketdata.*;
@@ -16,27 +18,33 @@ import stockmaster.util.Log.LogLevel;
 public class StockManager {
 	
 	// set debug level
-	public static final LogLevel LOG_LEVEL = LogLevel.DEBUG;
+	public static final LogLevel LOG_LEVEL = LogLevel.INFO;
 	
 	private MarketData marketData;
-	private TradingAlgorithm algo;
-	private DataRecorder recorder;
+	private ArrayList<TradingAlgorithm> algoList;
+	private ArrayList<DataRecorder>  recorderList;
 	
 	public StockManager(MarketData marketData) {
 		this.marketData = marketData;
+		
+		algoList = new ArrayList<TradingAlgorithm>();
+		recorderList = new ArrayList<DataRecorder>();
 	}
 	
 	public void loadAlgo(TradingAlgorithm algo) {
-		this.algo = algo;
+		algoList.add(algo);
 		Log.info(this, "Algorithm loaded: "+algo.getClass().getName());
-		marketData.start();
 	}
 	
 	public void loadRecorder(DataRecorder recorder) {
-		this.recorder = recorder;
+		recorderList.add(recorder);
 		Log.info(this, "Recorder loaded: "+ recorder.getClass().getName());
 		marketData.subscribe(recorder);
 
+	}
+	
+	public void start() {
+		marketData.start();
 	}
 	
 	public MarketData getMarketData() {
@@ -54,19 +62,19 @@ public class StockManager {
         StockManager stockManager = new StockManager(new MarketDataEmulatorImpl(Market.NEUTRAL));
 
 		// Starts the application using Replayer SGX Web Market Data
-		//StockManager stockManager = new StockManager(new ReplayCSVMarketDataImpl("FeedData\\","20120824","SGX"));
+		//StockManager stockManager = new StockManager(new ReplayCSVMarketDataImpl("FeedData/","20120824","SGX"));
 
         // Starts the application using Mongo Replayer
         //StockManager stockManager = new StockManager(new ReplayMongoMarketDataImpl("sgx", "20120827"));
 
 		//Define recorder to use with marketData
-		//stockManager.loadRecorder(new CSVFileRecorderImpl("", "Random"));
+		stockManager.loadRecorder(new CSVFileRecorderImpl("", "Random"));
 		//stockManager.loadRecorder(new MongoRecorderImpl("sgx"));
 		
 		
 		// Define algorithm stock manager would use to monitor the market
 		stockManager.loadAlgo(new RideTheTideImpl(stockManager));
 		
-		
+		stockManager.start();
 	}
 }

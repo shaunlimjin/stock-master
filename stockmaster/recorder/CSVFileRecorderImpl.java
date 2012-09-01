@@ -20,16 +20,15 @@ public class CSVFileRecorderImpl extends DataRecorder {
 			path = "FeedData";
 			Log.debug(this, "Path not found, setting to default");
 			new File(path).mkdir();
-			file = new File(path + "\\" + getCurrentDate() + "_" + marketName + ".csv");
+			file = new File(path + "/" + Log.getCurrentDate() + "_" + marketName + ".csv");
 		}else
 		{
-			file = new File(path + getCurrentDate() + "_" + marketName + ".csv");
+			file = new File(path + Log.getCurrentDate() + "_" + marketName + ".csv");
 		}
 		marketName = market;
 		try {
-			writer = new FileWriter(file);
+			writer = new FileWriter(file, true);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

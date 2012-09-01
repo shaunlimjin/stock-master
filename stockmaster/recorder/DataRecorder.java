@@ -17,11 +17,4 @@ public abstract class DataRecorder implements MarketDataSubscriber {
 	
 	//Future implementation can be to a database, xml etc etc...
 	protected abstract void record(StockData data);
-	
-	//For naming convention uses
-	protected String getCurrentDate(){
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-		Date date = new Date();
-		return dateFormat.format(date);
-	}
 }

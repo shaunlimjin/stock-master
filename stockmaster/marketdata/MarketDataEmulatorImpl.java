@@ -14,7 +14,7 @@ public class MarketDataEmulatorImpl extends MarketData {
 
 	// Market.BULL (70% chance of price increasing), Market.BEAR (70% chance of price decreasing), 
 	// Market.NEUTRAL (50% chance of price increasing)
-	public static Market marketSentiment = Market.NEUTRAL;
+	public Market marketSentiment = Market.NEUTRAL;
 	
 	public static enum Market {
 		BULL, BEAR, NEUTRAL;
@@ -87,7 +87,7 @@ public class MarketDataEmulatorImpl extends MarketData {
 			
 			stockData.setStockCode(i+"");
 			stockData.setStockName(i+"");
-			
+						
 			float buyPrice = (float)Math.random()*MAX_PRICE_OF_STOCK;
 			stockData.setBuyPrice(buyPrice);
 			stockData.setSellPrice(buyPrice+1);

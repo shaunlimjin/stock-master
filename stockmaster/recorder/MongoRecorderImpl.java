@@ -22,7 +22,7 @@ public class MongoRecorderImpl extends DataRecorder {
     private MongoManager mongoManager = MongoManager.getInstance();
 
     public MongoRecorderImpl(String market) {
-        mongoManager.setDatastore(market + "_" + getCurrentDate());
+        mongoManager.setDatastore(market + "_" + Log.getCurrentDate());
     }
 
     @Override

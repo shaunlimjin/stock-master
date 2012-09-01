@@ -50,9 +50,6 @@ public abstract class MarketData {
 		marketData = new Hashtable<String, StockData>();
 		workerThread = new WorkerThread(refreshTime, eventTimeout);	
 		marketSentiment = new Hashtable<String, Float>();
-		setOverallSentiment(0);
-		marketSentiment.clear();
-		
 	}
 	
 	// Populate hashtable of stocks with latest prices

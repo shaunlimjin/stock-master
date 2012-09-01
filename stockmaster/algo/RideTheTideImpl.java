@@ -44,22 +44,24 @@ public class RideTheTideImpl extends TradingAlgorithm {
 			
 			// Check if price has increased by x% in y time
 			for (PriceTimeUnit unit : priceHistoryList) {
-				Log.info(this, "Time/Price: "+unit.time+"/"+unit.price);
+				Log.info(this, "[Price History] Time/Price: "+unit.time+"/"+unit.price);
 				
 				// Check what is the current time vs the last recorded time
 				if (startTime < unit.time) {
 					// compare current price with startTime price - check if it exceeds x%
 					float percentageChange = 100*(priceHistoryList.getFirst().price-unit.price) / unit.price;	
-					Log.info(this, "Percentage Change: "+percentageChange +" (Current Price: "+priceHistoryList.getFirst().price+ " Start Price: "+unit.price+")");	
+					Log.info(this, "[Price History] Percentage Change: "+percentageChange +" (Current Price: "+priceHistoryList.getFirst().price+ " Start Price: "+unit.price+")");	
 					
 					// decide whether or not to BUY - stock must increase by x% over specified time	
 					if ((percentageChange >= PRICE_INCREASE) && (stockUnit.position == 0)) {
 						Log.write("#### BUY: "+stockUnit.getStockData().getStockCode()+" ("+stockUnit.getStockData().getStockName()+") @ $"+priceHistoryList.getFirst().price+ "(Start Price: "+unit.price+")");
+						Log.info(this, "#### BUY: "+stockUnit.getStockData().getStockCode()+" ("+stockUnit.getStockData().getStockName()+") @ $"+priceHistoryList.getFirst().price+ "(Start Price: "+unit.price+")");
 						stockUnit.position = 1;
 						
 					} // decide whether or not to SELL - stock must decrease by x% over specified time
 					else if ((percentageChange <= PRICE_DECREASE) && (stockUnit.position != 0)) {
 						Log.write("#### SELL: "+stockUnit.getStockData().getStockCode()+" ("+stockUnit.getStockData().getStockName()+") @ $"+priceHistoryList.getFirst().price+ "(Start Price: "+unit.price+")");
+						Log.info(this, "#### SELL: "+stockUnit.getStockData().getStockCode()+" ("+stockUnit.getStockData().getStockName()+") @ $"+priceHistoryList.getFirst().price+ "(Start Price: "+unit.price+")");
 						stockUnit.position = 0;
 					}
 				}
