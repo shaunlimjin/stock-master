@@ -54,12 +54,12 @@ public class RideTheTideImpl extends TradingAlgorithm {
 					
 					// decide whether or not to BUY - stock must increase by x% over specified time	
 					if ((percentageChange >= PRICE_INCREASE) && (stockUnit.position == 0)) {
-						Log.write("## BUY: "+stockUnit.getStockData().getStockCode()+" ("+stockUnit.getStockData().getStockName()+") @ $"+priceHistoryList.getFirst().price+ "(Start Price: "+unit.price+")");
+						Log.write("#### BUY: "+stockUnit.getStockData().getStockCode()+" ("+stockUnit.getStockData().getStockName()+") @ $"+priceHistoryList.getFirst().price+ "(Start Price: "+unit.price+")");
 						stockUnit.position = 1;
 						
 					} // decide whether or not to SELL - stock must decrease by x% over specified time
 					else if ((percentageChange <= PRICE_DECREASE) && (stockUnit.position != 0)) {
-						Log.write("## SELL: "+stockUnit.getStockData().getStockCode()+" ("+stockUnit.getStockData().getStockName()+") @ $"+priceHistoryList.getFirst().price+ "(Start Price: "+unit.price+")");
+						Log.write("#### SELL: "+stockUnit.getStockData().getStockCode()+" ("+stockUnit.getStockData().getStockName()+") @ $"+priceHistoryList.getFirst().price+ "(Start Price: "+unit.price+")");
 						stockUnit.position = 0;
 					}
 				}
@@ -142,7 +142,6 @@ public class RideTheTideImpl extends TradingAlgorithm {
 			unit.price = price;
 			unit.time = System.currentTimeMillis();
 			
-			Log.debug(this, "Adding PriceTimeUnit to priceHistoryList (Size: "+priceHistoryList.size()+")");
 			priceHistoryList.addFirst(unit);
 			Log.debug(this, "Added PriceTimeUnit to priceHistoryList (Size: "+priceHistoryList.size()+")");
 		}

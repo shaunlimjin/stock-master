@@ -3,6 +3,7 @@ package stockmaster.manager;
 import stockmaster.algo.RideTheTideImpl;
 import stockmaster.algo.TradingAlgorithm;
 import stockmaster.marketdata.*;
+import stockmaster.marketdata.MarketDataEmulatorImpl.Market;
 import stockmaster.recorder.DataRecorder;
 import stockmaster.recorder.CSVFileRecorderImpl;
 import stockmaster.recorder.MongoRecorderImpl;
@@ -50,13 +51,13 @@ public class StockManager {
 		//StockManager stockManager = new StockManager(new SGXWebMarketDataImpl());
 
         // Starts the appplication using MarketDataEmulator
-        //StockManager stockManager = new StockManager(new MarketDataEmulatorImpl());
+        StockManager stockManager = new StockManager(new MarketDataEmulatorImpl(Market.NEUTRAL));
 
 		// Starts the application using Replayer SGX Web Market Data
 		//StockManager stockManager = new StockManager(new ReplayCSVMarketDataImpl("FeedData\\","20120824","SGX"));
 
         // Starts the application using Mongo Replayer
-        StockManager stockManager = new StockManager(new ReplayMongoMarketDataImpl("sgx", "20120827"));
+        //StockManager stockManager = new StockManager(new ReplayMongoMarketDataImpl("sgx", "20120827"));
 
 		//Define recorder to use with marketData
 		//stockManager.loadRecorder(new CSVFileRecorderImpl("", "Random"));

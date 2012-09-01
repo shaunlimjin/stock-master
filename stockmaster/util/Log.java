@@ -70,7 +70,7 @@ public class Log {
 			FileWriter aWriter = new FileWriter(file, true);
 			aWriter.write(currentTime + " " + msg
 					+ System.getProperty("line.separator"));
-			System.out.println(currentTime + " " + msg);
+			//System.out.println(currentTime + " " + msg);
 			aWriter.flush();
 			aWriter.close();
 		} catch (Exception e) {

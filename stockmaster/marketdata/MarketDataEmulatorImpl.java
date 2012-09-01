@@ -9,13 +9,24 @@ import stockmaster.util.Log;
 public class MarketDataEmulatorImpl extends MarketData {
 
 	public static final int GENERATE_NUMBER_OF_STOCKS = 1500;
-	public static final int NUMBER_OF_STOCKS_PER_UPDATE = 50;
+	public static final int NUMBER_OF_STOCKS_PER_UPDATE = 20;
 	public static final int MAX_PRICE_OF_STOCK = 25;
+
+	// Market.BULL (70% chance of price increasing), Market.BEAR (70% chance of price decreasing), 
+	// Market.NEUTRAL (50% chance of price increasing)
+	public static Market marketSentiment = Market.NEUTRAL;
+	
+	public static enum Market {
+		BULL, BEAR, NEUTRAL;
+	}
+	
+	public MarketDataEmulatorImpl(Market marketSentiment) {
+		super();
+		this.marketSentiment = marketSentiment;
+	}
 	
 	@Override
 	public void populateData() {
-		
-		
 		float noOfStockUpdates = ((float) Math.random()*NUMBER_OF_STOCKS_PER_UPDATE);
 		
 		Log.debug(this, "Changing the prices of "+noOfStockUpdates+" stocks.");
@@ -29,14 +40,23 @@ public class MarketDataEmulatorImpl extends MarketData {
 			price = (float)((Math.random()*stockData.getBuyPrice())*0.05);
 			
 			// 50-50 chance of price increasing/decreasing
-			if (Math.random() > 5)
+			float weight;
+			
+			if (marketSentiment == Market.BULL)
+				weight = 0.7f;
+			else if (marketSentiment == Market.BEAR)
+				weight = 0.3f;
+			else // Market.NEUTRAL
+				weight = 0.5f;
+				
+			if (Math.random() > weight)
 				price *= -1;
 			
 			stockData.clearFieldChangedList();
 			
-			Log.debug(this, "Updating stock: "+stockCode+" Price difference: "+price);
+			Log.debug(this, "Updating stock: "+stockCode+" Before (Buy/Sell): "+stockData.getBuyPrice()+"/"+stockData.getSellPrice()+" Price Change: "+price);
 			stockData.setBuyPrice(stockData.getBuyPrice()+price);
-			stockData.setSellPrice(stockData.getBuyPrice()+1);
+			stockData.setSellPrice(stockData.getBuyPrice()+price);
 			
 			if (price > 0)
 				stockData.setLastPrice(stockData.getBuyPrice());
