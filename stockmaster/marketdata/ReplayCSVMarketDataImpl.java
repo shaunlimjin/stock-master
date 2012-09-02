@@ -152,7 +152,7 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 			Log.debug(this, "Total stock parsed : " + Integer.toString(i));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			Log.write(e);
+			e.printStackTrace();
 		}
 
 	}
@@ -166,12 +166,12 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 	@Override
 	public void init() {
 		try{
-			dataFile = new File(selectedFolder + "\\" + selectedDate + "_" + selectedMarket + ".csv");
+			dataFile = new File(selectedFolder + "/" + selectedDate + "_" + selectedMarket + ".csv");
 			freader = new FileReader(dataFile);
 			reader = new BufferedReader(freader);
 		}catch (Exception e)
 		{
-			Log.write(e);
+			e.printStackTrace();
 		}
 
 	}

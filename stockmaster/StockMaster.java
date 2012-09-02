@@ -56,25 +56,25 @@ public class StockMaster {
 		System.out.println("Starting StockManager in "+Log.logLevel+" mode.");
 		
 		// Starts the application using SGX Web Market Data 
-		//StockManager stockManager = new StockManager(new SGXWebMarketDataImpl());
+		StockMaster stockMaster = new StockMaster(new SGXWebMarketDataImpl());
 
         // Starts the appplication using MarketDataEmulator
-        StockMaster stockManager = new StockMaster(new MarketDataEmulatorImpl(Market.NEUTRAL));
+        //StockMaster stockMaster = new StockMaster(new MarketDataEmulatorImpl(Market.NEUTRAL));
 
 		// Starts the application using Replayer SGX Web Market Data
-		//StockManager stockManager = new StockManager(new ReplayCSVMarketDataImpl("FeedData/","20120824","SGX"));
+        //StockMaster stockMaster = new StockMaster(new ReplayCSVMarketDataImpl("FeedData/","20120901","Random"));
 
         // Starts the application using Mongo Replayer
-        //StockManager stockManager = new StockManager(new ReplayMongoMarketDataImpl("sgx", "20120827"));
+        //StockMaster stockMaster = new StockMaster(new ReplayMongoMarketDataImpl("sgx", "20120902"));
 
 		//Define recorder to use with marketData
-		stockManager.loadRecorder(new CSVFileRecorderImpl("", "Random"));
-		//stockManager.loadRecorder(new MongoRecorderImpl("sgx"));
+		//stockMaster.loadRecorder(new CSVFileRecorderImpl("", "Random"));
+		//stockMaster.loadRecorder(new MongoRecorderImpl("sgx"));
 		
 		
 		// Define algorithm stock manager would use to monitor the market
-		stockManager.loadAlgo(new RideTheTideImpl(stockManager));
+        stockMaster.loadAlgo(new RideTheTideImpl(stockMaster));
 		
-		stockManager.start();
+        stockMaster.start();
 	}
 }
