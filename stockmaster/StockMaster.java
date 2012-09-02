@@ -1,4 +1,4 @@
-package stockmaster.manager;
+package stockmaster;
 
 import java.util.ArrayList;
 
@@ -15,7 +15,7 @@ import stockmaster.util.Log.LogLevel;
 /* Main Application
  * Starts up the application with predefined MarketData source and Algorithm.
  */
-public class StockManager {
+public class StockMaster {
 	
 	// set debug level
 	public static final LogLevel LOG_LEVEL = LogLevel.INFO;
@@ -24,7 +24,7 @@ public class StockManager {
 	private ArrayList<TradingAlgorithm> algoList;
 	private ArrayList<DataRecorder>  recorderList;
 	
-	public StockManager(MarketData marketData) {
+	public StockMaster(MarketData marketData) {
 		this.marketData = marketData;
 		
 		algoList = new ArrayList<TradingAlgorithm>();
@@ -59,7 +59,7 @@ public class StockManager {
 		//StockManager stockManager = new StockManager(new SGXWebMarketDataImpl());
 
         // Starts the appplication using MarketDataEmulator
-        StockManager stockManager = new StockManager(new MarketDataEmulatorImpl(Market.NEUTRAL));
+        StockMaster stockManager = new StockMaster(new MarketDataEmulatorImpl(Market.NEUTRAL));
 
 		// Starts the application using Replayer SGX Web Market Data
 		//StockManager stockManager = new StockManager(new ReplayCSVMarketDataImpl("FeedData/","20120824","SGX"));

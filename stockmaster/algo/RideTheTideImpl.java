@@ -3,7 +3,7 @@ package stockmaster.algo;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
-import stockmaster.manager.StockManager;
+import stockmaster.StockMaster;
 import stockmaster.unit.StockData;
 import stockmaster.util.Log;
 
@@ -28,7 +28,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 	// stockCode, StockUnit pair
 	private Hashtable<String, StockUnit> stockList;
 	
-	public RideTheTideImpl(StockManager stockManager) {
+	public RideTheTideImpl(StockMaster stockManager) {
 		super(stockManager, 30000);
 		stockList = new Hashtable<String, StockUnit>();
 	}
