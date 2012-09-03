@@ -18,7 +18,7 @@ public class Log {
 	private final static SimpleDateFormat dateOnlyFormat = new SimpleDateFormat("yyyyMMdd");
 
 	public enum LogLevel {
-		NONE, INFO, DEBUG, ERROR
+		NONE, INFO, DEBUG, ERROR, ALGO_TESTING
 	}
 
 	public static void debug(Object obj, String msg) {
@@ -29,6 +29,11 @@ public class Log {
 	public static void info(Object obj, String debug) {
 		if ((logLevel == LogLevel.INFO) || (logLevel == LogLevel.DEBUG))
 			msg(obj, debug, "INFO");
+	}
+	
+	public static void algoTesting(Object obj, String debug) {
+		if (logLevel == LogLevel.ALGO_TESTING)
+			msg(obj, debug, "ALGO TESTING");
 	}
 	
 	public static void error(Object obj, String debug) {

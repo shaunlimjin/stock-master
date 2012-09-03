@@ -21,4 +21,12 @@ public class RiskManager {
 		
 		return instance;
 	}
+	
+	public void executeBuy(String stockCode, float price) {
+		
+	}
+	
+	public void executeSell(String stockCode, float price) {
+		
+	}
 }
