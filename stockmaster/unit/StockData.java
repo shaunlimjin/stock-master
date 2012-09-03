@@ -280,6 +280,10 @@ public class StockData {
 		lastUpdate.setTimeInMillis(time);
 	}
 	
+	public void setLastUpdate(Date dateTime) {
+		lastUpdate.setTime(dateTime);
+	}
+	
 	public Date getLastUpdate() {
 		return lastUpdate.getTime();
 	}

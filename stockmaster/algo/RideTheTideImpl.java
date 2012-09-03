@@ -33,7 +33,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 	}
 	
 	private void analyze(StockUnit stockUnit) {
-		long startTime = System.currentTimeMillis() - (long)TIME_PERIOD;
+		long startTime = stockUnit.getStockData().getLastUpdate().getTime() - (long)TIME_PERIOD;
 
 		// Retrieve price history of a stock
 		LinkedList<PriceTimeUnit> priceHistoryList = stockUnit.getPriceHistoryList();
@@ -110,7 +110,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 				stockList.put(stockCode, stockUnit);
 			}
 
-			stockUnit.addInPriceList(stockData.getLastPrice());
+			stockUnit.addInPriceList(stockData.getLastPrice(), stockData.getLastUpdate().getTime());
 
 			// analyze whether stock meets our triggers
 			analyze(stockUnit);
@@ -178,7 +178,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 			this.position = position;
 		}
 
-		public void addInPriceList(float price) {
+		public void addInPriceList(float price, long time) {
 			PriceTimeUnit unit;
 
 			if (priceHistoryList.size() == PRICE_TIME_UNIT_QUEUE_SIZE) {
@@ -188,7 +188,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 				unit = new PriceTimeUnit();
 
 			unit.price = price;
-			unit.time = System.currentTimeMillis();
+			unit.time = time;
 
 			priceHistoryList.addFirst(unit);
 			Log.debug(this, "Added PriceTimeUnit to priceHistoryList (Size: " + priceHistoryList.size() + ")");
