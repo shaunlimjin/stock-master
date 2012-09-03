@@ -8,8 +8,8 @@ import stockmaster.util.Log;
  */
 public class MarketDataEmulatorImpl extends MarketData {
 
-	public static final int GENERATE_NUMBER_OF_STOCKS = 1500;
-	public static final int NUMBER_OF_STOCKS_PER_UPDATE = 50;
+	public static final int GENERATE_NUMBER_OF_STOCKS = 2;
+	public static final int NUMBER_OF_STOCKS_PER_UPDATE = 1;
 	public static final int MAX_PRICE_OF_STOCK = 25;
 	
 	@Override
