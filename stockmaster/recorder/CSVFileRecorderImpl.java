@@ -4,6 +4,7 @@ import stockmaster.unit.StockData;
 import stockmaster.util.Log;
 
 import java.io.*;
+import java.util.Date;
 
 public class CSVFileRecorderImpl extends DataRecorder {
 
@@ -11,25 +12,27 @@ public class CSVFileRecorderImpl extends DataRecorder {
 	private File file;
 	private FileWriter writer;
 	
-	public CSVFileRecorderImpl(String filePath, String market)  {
+	public CSVFileRecorderImpl(String filePath, String market, Date startDate, Date endDate)  {
+		
+		super(startDate, endDate);
+		
 		path = filePath;
 		marketName = market;
-		
+					
 		if (!new File(filePath).exists())
 		{
 			path = "FeedData";
 			Log.debug(this, "Path not found, setting to default");
 			new File(path).mkdir();
-			file = new File(path + "\\" + getCurrentDate() + "_" + marketName + ".csv");
+			file = new File(path + "/" + Log.getCurrentDate() + "_" + marketName + ".csv");
 		}else
 		{
-			file = new File(path + getCurrentDate() + "_" + marketName + ".csv");
+			file = new File(path + Log.getCurrentDate() + "_" + marketName + ".csv");
 		}
 		marketName = market;
 		try {
-			writer = new FileWriter(file);
+			writer = new FileWriter(file, true);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

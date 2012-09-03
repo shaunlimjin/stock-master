@@ -33,7 +33,6 @@ public class SGXWebMarketDataImpl extends MarketData {
 			jsonURL = new URL(
 					"http://sgx.com/JsonRead/JsonData?qryId=RStock&timeout=30&%20noCache=1345409928980.862806.0060484405");
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

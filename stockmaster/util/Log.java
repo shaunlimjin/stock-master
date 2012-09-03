@@ -5,15 +5,18 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Log {
 
 	public static LogLevel logLevel = LogLevel.INFO;
-	private static String logFile = "msglog.txt";
-	private final static DateFormat df = new SimpleDateFormat(
-			"yyyy.MM.dd  hh:mm:ss ");
+	private static String logFile = "StockMaster_";
+	private final static DateFormat dateTimeFormat = new SimpleDateFormat(
+			"yyyyMMdd hh:mm:ss");
+	
+	private final static SimpleDateFormat dateOnlyFormat = new SimpleDateFormat("yyyyMMdd");
 
 	public enum LogLevel {
 		NONE, INFO, DEBUG, ERROR
@@ -35,7 +38,7 @@ public class Log {
 	}
 
 	private static void msg(Object obj, String msg, String level) {
-		String timestamp = Log.df.format(new Date());
+		String timestamp = Log.dateTimeFormat.format(new Date());
 		System.out.println("[" + level + "/"+timestamp+"] " + obj.getClass().getName()
 				+ " - " + msg);
 		
@@ -66,11 +69,10 @@ public class Log {
 	public static void write(String file, String msg) {
 		try {
 			Date now = new Date();
-			String currentTime = Log.df.format(now);
-			FileWriter aWriter = new FileWriter(file, true);
+			String currentTime = Log.dateTimeFormat.format(now);
+			FileWriter aWriter = new FileWriter(file+getCurrentDate()+".txt", true);
 			aWriter.write(currentTime + " " + msg
 					+ System.getProperty("line.separator"));
-			System.out.println(currentTime + " " + msg);
 			aWriter.flush();
 			aWriter.close();
 		} catch (Exception e) {
@@ -87,5 +89,18 @@ public class Log {
 		} catch (Exception e2) {
 			return "bad stack2string";
 		}
+	}
+	
+	public static String getCurrentDate(){
+		return dateOnlyFormat.format(new Date());
+	}
+	
+	public static Date getFormattedDateTime(String date){
+		try {
+			return dateTimeFormat.parse(date);
+		} catch (ParseException e) {
+			Log.error(null,"Invalid date conversion");
+		}
+		return null;
 	}
 }

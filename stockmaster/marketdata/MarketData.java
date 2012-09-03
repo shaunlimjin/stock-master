@@ -50,9 +50,6 @@ public abstract class MarketData {
 		marketData = new Hashtable<String, StockData>();
 		workerThread = new WorkerThread(refreshTime, eventTimeout);	
 		marketSentiment = new Hashtable<String, Float>();
-		setOverallSentiment(0);
-		marketSentiment.clear();
-		
 	}
 	
 	// Populate hashtable of stocks with latest prices
@@ -80,15 +77,13 @@ public abstract class MarketData {
 		marketSentiment.clear();
 	}
 	
-	public void calculateSentiment(){
-			
-		for(String e:marketData.keySet()){		
-			StockData data = marketData.get(e);
-			
-			if(marketSentiment.containsKey(e)){
-				float value = marketSentiment.get(e);
-					Log.debug(this, "Old Price :" + String.valueOf(value));
-					Log.debug(this, "New Price :" + String.valueOf(data.getLastPrice()));
+	public void calculateSentiment(StockData data){
+		
+			if(marketSentiment.containsKey(data.getStockCode())){
+				float value = marketSentiment.get(data.getStockCode());
+					Log.debug(this, "Old Price :" + value);
+					Log.debug(this, "New Price :" + data.getLastPrice());
+					
 				if(data.getLastPrice()>value){
 				    setOverallSentiment(getOverallSentiment()+data.getSentimentWeight());
 				    data.setSentiment(data.getSentiment() + 1);
@@ -97,15 +92,12 @@ public abstract class MarketData {
 					data.setSentiment(data.getSentiment() - 1);
 				}
 											
-				marketSentiment.put(e, data.getLastPrice());
-				Log.debug(this, data.getStockCode() + " Sentiment : " + String.valueOf(data.getSentiment()));
+				marketSentiment.put(data.getStockCode(), data.getLastPrice());
+				Log.debug(this, data.getStockCode() + " Sentiment : " + data.getSentiment());
 			}
 			else{
-			
 				marketSentiment.put(data.getStockCode(),data.getLastPrice());
-			
 			}
-		}
 	
 	}
 
@@ -116,7 +108,6 @@ public abstract class MarketData {
 	// Override this method to perform routine work / tap into the thread
 	public void event() {
 		refresh();
-		calculateSentiment();
 		Log.info(this, "Current market sentiment is : " + getOverallSentiment());
 	}
 	
@@ -126,6 +117,8 @@ public abstract class MarketData {
 	// Inform subscribers that a stock has updated values (e.g. price changes, volume changes etc.) 
 	// Subscribers are typically Algorithms which are interested in being informed on price changes.
 	public void stockChange(StockData stock) {
+		calculateSentiment(stock);
+		
 		for (MarketDataSubscriber obj : subscriptionList)
 			obj.stockChange(stock);
 	}

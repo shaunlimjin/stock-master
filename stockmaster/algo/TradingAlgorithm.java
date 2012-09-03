@@ -1,6 +1,6 @@
 package stockmaster.algo;
 
-import stockmaster.manager.StockManager;
+import stockmaster.StockMaster;
 import stockmaster.marketdata.MarketDataSubscriber;
 
 /*
@@ -10,10 +10,10 @@ import stockmaster.marketdata.MarketDataSubscriber;
  */
 public abstract class TradingAlgorithm implements MarketDataSubscriber {
 
-	protected StockManager stockManager;
+	protected StockMaster stockManager;
 
 	// Automatically subscribes to a particular MarketData for stock changes
-	public TradingAlgorithm(StockManager stockManager, int refreshTime) {
+	public TradingAlgorithm(StockMaster stockManager, int refreshTime) {
 		this.stockManager = stockManager;
 		stockManager.getMarketData().setRefreshTime(refreshTime);
 		stockManager.getMarketData().subscribe(this);
