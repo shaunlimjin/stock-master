@@ -1,6 +1,7 @@
 package stockmaster;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import stockmaster.algo.RideTheTideImpl;
 import stockmaster.algo.TradingAlgorithm;
@@ -68,7 +69,8 @@ public class StockMaster {
         //StockMaster stockMaster = new StockMaster(new ReplayMongoMarketDataImpl("sgx", "20120902"));
 
 		//Define recorder to use with marketData
-		//stockMaster.loadRecorder(new CSVFileRecorderImpl("", "Random"));
+		//Datetime format yyyyMMdd hh:mm:ss 
+		stockMaster.loadRecorder(new CSVFileRecorderImpl("", "Random", Log.getFormattedDateTime("20120903 00:00:00"), Log.getFormattedDateTime("20120903 17:59:59")));
 		//stockMaster.loadRecorder(new MongoRecorderImpl("sgx"));
 		
 		// Define algorithm stock manager would use to monitor the market

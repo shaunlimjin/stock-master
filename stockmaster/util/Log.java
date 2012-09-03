@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -13,7 +14,7 @@ public class Log {
 	public static LogLevel logLevel = LogLevel.INFO;
 	private static String logFile = "StockMaster_";
 	private final static DateFormat dateTimeFormat = new SimpleDateFormat(
-			"yyyyMMdd hh:mm:ss ");
+			"yyyyMMdd hh:mm:ss");
 	
 	private final static SimpleDateFormat dateOnlyFormat = new SimpleDateFormat("yyyyMMdd");
 
@@ -97,5 +98,14 @@ public class Log {
 	
 	public static String getCurrentDate(){
 		return dateOnlyFormat.format(new Date());
+	}
+	
+	public static Date getFormattedDateTime(String date){
+		try {
+			return dateTimeFormat.parse(date);
+		} catch (ParseException e) {
+			Log.error(null,"Invalid date conversion");
+		}
+		return null;
 	}
 }
