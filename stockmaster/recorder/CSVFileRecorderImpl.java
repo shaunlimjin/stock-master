@@ -24,10 +24,10 @@ public class CSVFileRecorderImpl extends DataRecorder {
 			path = "FeedData";
 			Log.debug(this, "Path not found, setting to default");
 			new File(path).mkdir();
-			file = new File(path + "/" + Log.getCurrentDate() + "_" + marketName + ".csv");
+			file = new File(path + "/" + Log.getCurrentDate(new Date()) + "_" + marketName + ".csv");
 		}else
 		{
-			file = new File(path + Log.getCurrentDate() + "_" + marketName + ".csv");
+			file = new File(path + Log.getCurrentDate(new Date()) + "_" + marketName + ".csv");
 		}
 		marketName = market;
 		try {
@@ -45,7 +45,7 @@ public class CSVFileRecorderImpl extends DataRecorder {
 						+","+data.getLowPrice()+","+data.getOpenPrice()+","+data.getPercentChange()
 						+","+data.getRemarks()+","+data.getSector()+","+data.getSellPrice()+","+data.getSellVolume()
 						+","+data.getStockCode()+","+data.getStockName()+","+data.getValue()+","+data.getValueChange()
-						+","+data.getVolume()+"\n");
+						+","+data.getVolume()+","+Log.formateDateTime(data.getLastUpdate())+"\n");
 				writer.flush();
 			}catch(Exception e){
 				Log.write(e);

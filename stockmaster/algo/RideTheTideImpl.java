@@ -199,4 +199,9 @@ public class RideTheTideImpl extends TradingAlgorithm {
 		float price;
 		long time;
 	}
+
+	@Override
+	public void reset() {
+		stockList.clear();
+	}
 }

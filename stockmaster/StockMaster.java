@@ -60,17 +60,17 @@ public class StockMaster {
 		//StockMaster stockMaster = new StockMaster(new SGXWebMarketDataImpl());
 
         // Starts the appplication using MarketDataEmulator
-        //StockMaster stockMaster = new StockMaster(new MarketDataEmulatorImpl(Market.NEUTRAL));
+        StockMaster stockMaster = new StockMaster(new MarketDataEmulatorImpl(Market.NEUTRAL));
 
 		// Starts the application using Replayer SGX Web Market Data
-        StockMaster stockMaster = new StockMaster(new ReplayCSVMarketDataImpl("FeedData/","20120903","SGX"));
+        //StockMaster stockMaster = new StockMaster(new ReplayCSVMarketDataImpl("FeedData/","20120903","SGX"));
 
         // Starts the application using Mongo Replayer
         //StockMaster stockMaster = new StockMaster(new ReplayMongoMarketDataImpl("sgx", "20120902"));
 
 		//Define recorder to use with marketData
 		//Datetime format yyyyMMdd hh:mm:ss 
-		stockMaster.loadRecorder(new CSVFileRecorderImpl("", "Random", Log.getFormattedDateTime("20120903 00:00:00"), Log.getFormattedDateTime("20120903 17:59:59")));
+		stockMaster.loadRecorder(new CSVFileRecorderImpl("", "Random", Log.getFormattedDateTime("20120904 08:58:00"), Log.getFormattedDateTime("20120904 17:05:00")));
 		//stockMaster.loadRecorder(new MongoRecorderImpl("sgx"));
 		
 		// Define algorithm stock manager would use to monitor the market

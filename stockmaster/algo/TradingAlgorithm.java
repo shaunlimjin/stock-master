@@ -43,6 +43,10 @@ public abstract class TradingAlgorithm implements MarketDataSubscriber {
 		riskManager.executeSell(stockCode, price);
 	}
 	
+	// Method to clear all data in Algo. This is required for automated algo testing.
+	public abstract void reset();
+	
+	
 	// #### AUTOMATED ALGO TESTING METHODS ###
 	public abstract void initAlgoTestParameters();
 
@@ -76,6 +80,8 @@ public abstract class TradingAlgorithm implements MarketDataSubscriber {
 				stockManager.getMarketData().start();
 				
 				Log.algoTesting(this, "Profit: "+noOfProfit+" Loss: "+noOfLoss);
+				
+				reset();
 				noOfProfit = 0;
 				noOfLoss = 0;
 			}

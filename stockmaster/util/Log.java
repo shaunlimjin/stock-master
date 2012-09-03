@@ -75,7 +75,7 @@ public class Log {
 		try {
 			Date now = new Date();
 			String currentTime = Log.dateTimeFormat.format(now);
-			FileWriter aWriter = new FileWriter(file+getCurrentDate()+".txt", true);
+			FileWriter aWriter = new FileWriter(file+getCurrentDate(new Date())+".txt", true);
 			aWriter.write(currentTime + " " + msg
 					+ System.getProperty("line.separator"));
 			aWriter.flush();
@@ -96,8 +96,12 @@ public class Log {
 		}
 	}
 	
-	public static String getCurrentDate(){
-		return dateOnlyFormat.format(new Date());
+	public static String getCurrentDate(Date date){
+		return dateOnlyFormat.format(date);
+	}
+	
+	public static String formateDateTime(Date date) {
+		return dateTimeFormat.format(date);
 	}
 	
 	public static Date getFormattedDateTime(String date){

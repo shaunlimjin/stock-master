@@ -30,11 +30,9 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 		float floatValue;
 		try {
 			while((line = reader.readLine())!=null){			
-				
 				itemList = line.split(",");
                 //if stock does not already exist in marketData's hashtable, put it there.
 				if(!marketData.containsKey(itemList[11])){
-					
 					stockData = new StockData();
 					stockData.setStockCode(itemList[11]);
 					stockData.setStockName(itemList[12]);
@@ -179,6 +177,8 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 			dataFile = new File(selectedFolder + "/" + selectedDate + "_" + selectedMarket + ".csv");
 			freader = new FileReader(dataFile);
 			reader = new BufferedReader(freader);
+			
+			marketData.clear();
 		}catch (Exception e)
 		{
 			e.printStackTrace();

@@ -24,7 +24,7 @@ public class MongoRecorderImpl extends DataRecorder {
 
     public MongoRecorderImpl(String market, Date startDate, Date endDate) {
     	super(startDate, endDate);
-        mongoManager.setDatastore(market + "_" + Log.getCurrentDate());
+        mongoManager.setDatastore(market + "_" + Log.getCurrentDate(new Date()));
     }
 
     @Override
