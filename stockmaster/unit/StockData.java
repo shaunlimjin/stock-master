@@ -1,8 +1,5 @@
 package stockmaster.unit;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Transient;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,11 +8,8 @@ import stockmaster.util.Log;
 
 /*
  * Entity class to store Stock details.
- * Annotations used are Morphia's for persistence/retrieval from MongoDB.
  */
 
-//This entity will be stored in a collection in MongoDB named "stocks", and the class name will not be stored
-@Entity(value="stocks", noClassnameStored=true)
 public class StockData {
 	private float valueChange;
 	private float percentChange;
@@ -35,9 +29,9 @@ public class StockData {
 	private float sentiment;
 	private float sentimentWeight;
 	private Calendar lastUpdate;
+	private boolean hasInvalidData; // in case there were errors parsing marketdata, we will flag this stock as untradable.
 	
 	// indicates which field was last updated
-    @Transient //don't persist
 	private ArrayList<FieldChanged> fieldChangedList;
 
 	public static enum FieldChanged {
@@ -286,6 +280,14 @@ public class StockData {
 	
 	public Date getLastUpdate() {
 		return lastUpdate.getTime();
+	}
+	
+	public boolean hasInvalidData() {
+		return hasInvalidData();
+	}
+	
+	public void setHasInvalidData(boolean hasInvalidData) {
+		this.hasInvalidData = hasInvalidData;
 	}
 	
 	public void displayFieldChanges() {

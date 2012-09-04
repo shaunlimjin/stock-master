@@ -22,14 +22,20 @@ public class MongoRecorderImpl extends DataRecorder {
 
     private MongoManager mongoManager = MongoManager.getInstance();
 
+    /**
+     * Constructor.
+     * @param market Market to record. Will be used as collection name.
+     * @param startDate Recording start
+     * @param endDate Recording end
+     */
     public MongoRecorderImpl(String market, Date startDate, Date endDate) {
     	super(startDate, endDate);
-        mongoManager.setDatastore(market + "_" + Log.getCurrentDate(new Date()));
+        mongoManager.setCollection(market);
     }
 
     @Override
     protected void record(StockData data) {
         Log.info(this, "Writing to Mongo stock " + data.getStockName() + " | last price: " + data.getLastPrice());
-        mongoManager.save(data);
+        mongoManager.saveStockData(data);
     }
 }

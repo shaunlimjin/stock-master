@@ -44,7 +44,12 @@ public class Log {
 
 	private static void msg(Object obj, String msg, String level) {
 		String timestamp = Log.dateTimeFormat.format(new Date());
-		System.out.println("[" + level + "/"+timestamp+"] " + obj.getClass().getName()
+		
+		if (level.equals("ERROR"))
+			System.err.println("[" + level + "/"+timestamp+"] " + obj.getClass().getName()
+					+ " - " + msg);
+		else
+			System.out.println("[" + level + "/"+timestamp+"] " + obj.getClass().getName()
 				+ " - " + msg);
 		
 		write("[" + level + "/"+timestamp+"] " + obj.getClass().getName()

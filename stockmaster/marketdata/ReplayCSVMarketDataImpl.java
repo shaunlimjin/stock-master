@@ -155,7 +155,7 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 			}
 			Log.debug(this, "Total stock parsed : " + Integer.toString(i));
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.error(this, e.toString());
 		}
 		finally {
 			try {
@@ -187,7 +187,7 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 			marketData.clear();
 		}catch (Exception e)
 		{
-			e.printStackTrace();
+			Log.error(this, e.toString());
 		}
 
 	}

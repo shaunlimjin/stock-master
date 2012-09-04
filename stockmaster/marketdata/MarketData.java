@@ -188,7 +188,7 @@ public abstract class MarketData {
 					Log.info(this, "Going to sleep for "+sleepTime+"ms");
 					Thread.sleep(sleepTime);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Log.error(this, e.toString());
 				}
 			}
 			
@@ -219,7 +219,7 @@ public abstract class MarketData {
 			}
 			catch (Exception e) {
 				Log.error(this, "Unknown exception.");
-				e.printStackTrace();
+				Log.error(this, e.toString());
 			}
 			finally {
 				if (future != null)

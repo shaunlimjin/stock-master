@@ -19,7 +19,7 @@ public class SGXWebMarketDataImpl extends MarketData {
 
 	public static final int EVENT_TIMEOUT = 10000;
 	public static final int REFRESH_TIME = 20000;
-	
+
 	private URL jsonURL;
 	private JsonFactory jsonFactory;
 	private JsonParser jsonParser;
@@ -30,10 +30,9 @@ public class SGXWebMarketDataImpl extends MarketData {
 
 	public void init() {
 		try {
-			jsonURL = new URL(
-					"http://sgx.com/JsonRead/JsonData?qryId=RStock&timeout=30&%20noCache=1345409928980.862806.0060484405");
+			jsonURL = new URL("http://sgx.com/JsonRead/JsonData?qryId=RStock&timeout=30&%20noCache=1345409928980.862806.0060484405");
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			Log.error(this, e.toString());
 		}
 
 		jsonFactory = new JsonFactory();
@@ -42,7 +41,7 @@ public class SGXWebMarketDataImpl extends MarketData {
 	public void populateData() {
 		try {
 			Log.info(this, "Repopulating data...");
-			
+
 			jsonParser = jsonFactory.createJsonParser(jsonURL);
 			jsonParser.enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
 			jsonParser.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
@@ -77,14 +76,12 @@ public class SGXWebMarketDataImpl extends MarketData {
 
 				// if stock already exist, update prices only
 				if (marketData.containsKey(stockCode)) {
-					Log.debug(this, stockCode
-							+ " already exist. Retrieving record..");
+					Log.debug(this, stockCode + " already exist. Retrieving record..");
 					stock = marketData.get(stockCode);
 					stock.clearFieldChangedList(); // we will be re-populating
 													// updated field list
 				} else { // create new stock object and populate all fields
-					Log.debug(this, "Creating new object: " + stockCode + " ("
-							+ stockName + ")");
+					Log.debug(this, "Creating new object: " + stockCode + " (" + stockName + ")");
 					stock = new StockData();
 					stock.setStockName(stockName);
 					stock.setStockCode(stockCode);
@@ -94,7 +91,7 @@ public class SGXWebMarketDataImpl extends MarketData {
 				// traverse an item
 				do {
 					String value;
-					
+
 					moveToNextValue(jsonParser); // move to remarks
 					value = jsonParser.getText();
 					if (!value.equals(stock.getRemarks())) {
@@ -106,13 +103,20 @@ public class SGXWebMarketDataImpl extends MarketData {
 
 					moveToNextValue(jsonParser); // move to Last Traded;
 					value = jsonParser.getText();
-			
-					float floatValue;
-					
+
+					float floatValue = 0;
+
 					if (value.equals(""))
 						floatValue = 0;
-					else
-						floatValue = Float.parseFloat(value);
+					else {
+						try {
+							floatValue = Float.parseFloat(value);
+						}
+						catch (NumberFormatException e) {
+							stock.setHasInvalidData(true);
+							Log.error(this, e.toString());
+						}
+					}
 					
 					if (stock.getLastPrice() != floatValue) {
 						stock.setLastPrice(floatValue);
@@ -120,11 +124,18 @@ public class SGXWebMarketDataImpl extends MarketData {
 
 					moveToNextValue(jsonParser); // move to Change
 					value = jsonParser.getText();
-					
+
 					if (value.equals(""))
 						floatValue = 0;
-					else
-						floatValue = Float.parseFloat(value);
+					else {
+						try {
+							floatValue = Float.parseFloat(value);
+						}
+						catch (NumberFormatException e) {
+							stock.setHasInvalidData(true);
+							Log.error(this, e.toString());
+						}
+					}
 					
 					if (stock.getValueChange() != floatValue) {
 						stock.setValueChange(floatValue);
@@ -132,60 +143,96 @@ public class SGXWebMarketDataImpl extends MarketData {
 
 					moveToNextValue(jsonParser); // move to volume
 					value = jsonParser.getText();
-					
+
 					if (value.equals(""))
 						floatValue = 0;
-					else
-						floatValue = Float.parseFloat(value);
-					
+					else {
+						try {
+							floatValue = Float.parseFloat(value);
+						}
+						catch (NumberFormatException e) {
+							stock.setHasInvalidData(true);
+							Log.error(this, e.toString());
+						}
+					}
+						
+
 					if (stock.getVolume() != floatValue) {
 						stock.setVolume(floatValue);
 					}
 
 					moveToNextValue(jsonParser); // move to buyVolume
 					value = jsonParser.getText();
-					
+
 					if (value.equals(""))
 						floatValue = 0;
-					else
-						floatValue = Float.parseFloat(value);
+					else {
+						try {
+							floatValue = Float.parseFloat(value);
+						}
+						catch (NumberFormatException e) {
+							stock.setHasInvalidData(true);
+							Log.error(this, e.toString());
+						}
+					}
 					
 					if (stock.getBuyVolume() != floatValue) {
 						stock.setBuyVolume(floatValue);
 					}
 
 					moveToNextValue(jsonParser); // move to buy
-					
+
 					value = jsonParser.getText();
-					
+
 					if (value.equals(""))
 						floatValue = 0;
-					else
-						floatValue = Float.parseFloat(value);
-			
+					else {
+						try {
+							floatValue = Float.parseFloat(value);
+						}
+						catch (NumberFormatException e) {
+							stock.setHasInvalidData(true);
+							Log.error(this, e.toString());
+						}
+					}
+					
 					if (stock.getBuyPrice() != floatValue) {
 						stock.setBuyPrice(floatValue);
 					}
 
 					moveToNextValue(jsonParser); // move to sell
 					value = jsonParser.getText();
-					
+
 					if (value.equals(""))
 						floatValue = 0;
-					else
-						floatValue = Float.parseFloat(value);
-					
+					else {
+						try {
+							floatValue = Float.parseFloat(value);
+						}
+						catch (NumberFormatException e) {
+							stock.setHasInvalidData(true);
+							Log.error(this, e.toString());
+						}
+					}
+
 					if (stock.getSellPrice() != floatValue) {
 						stock.setSellPrice(floatValue);
 					}
 
 					moveToNextValue(jsonParser); // move to sell volume
 					value = jsonParser.getText();
-					
+
 					if (value.equals(""))
 						floatValue = 0;
-					else
-						floatValue = Float.parseFloat(value);
+					else {
+						try {
+							floatValue = Float.parseFloat(value);
+						}
+						catch (NumberFormatException e) {
+							stock.setHasInvalidData(true);
+							Log.error(this, e.toString());
+						}
+					}
 					
 					if (stock.getSellVolume() != floatValue) {
 						stock.setSellVolume(floatValue);
@@ -193,53 +240,77 @@ public class SGXWebMarketDataImpl extends MarketData {
 
 					moveToNextValue(jsonParser); // move to open
 					value = jsonParser.getText();
-					
+
 					if (value.equals(""))
 						floatValue = 0;
-					else
-						floatValue = Float.parseFloat(value);
+					else {
+						try {
+							floatValue = Float.parseFloat(value);
+						}
+						catch (NumberFormatException e) {
+							stock.setHasInvalidData(true);
+							Log.error(this, e.toString());
+						}
+					}
 					
-					if (!value.equals("-")
-							&& stock.getOpenPrice() != floatValue) {
+					if (!value.equals("-") && stock.getOpenPrice() != floatValue) {
 						stock.setOpenPrice(floatValue);
 					}
 
 					moveToNextValue(jsonParser); // move to high
 					value = jsonParser.getText();
-					
+
 					if (value.equals(""))
 						floatValue = 0;
-					else
-						floatValue = Float.parseFloat(value);
+					else {
+						try {
+							floatValue = Float.parseFloat(value);
+						}
+						catch (NumberFormatException e) {
+							stock.setHasInvalidData(true);
+							Log.error(this, e.toString());
+						}
+					}
 					
-					if (!value.equals("-")
-							&& stock.getHighPrice() != floatValue) {
+					if (!value.equals("-") && stock.getHighPrice() != floatValue) {
 						stock.setHighPrice(floatValue);
 					}
 
 					moveToNextValue(jsonParser); // move to low
 					value = jsonParser.getText();
-					
+
 					if (value.equals(""))
 						floatValue = 0;
-					else
-						floatValue = Float.parseFloat(value);
+					else {
+						try {
+							floatValue = Float.parseFloat(value);
+						}
+						catch (NumberFormatException e) {
+							stock.setHasInvalidData(true);
+							Log.error(this, e.toString());
+						}
+					}
 					
-					if (!value.equals("-")
-							&& stock.getLowPrice() != floatValue) {
+					if (!value.equals("-") && stock.getLowPrice() != floatValue) {
 						stock.setLowPrice(floatValue);
 					}
 
 					moveToNextValue(jsonParser); // move to value
 					value = jsonParser.getText();
-					
+
 					if (value.equals(""))
 						floatValue = 0;
-					else
-						floatValue = Float.parseFloat(value);
+					else {
+						try {
+							floatValue = Float.parseFloat(value);
+						}
+						catch (NumberFormatException e) {
+							stock.setHasInvalidData(true);
+							Log.error(this, e.toString());
+						}
+					}
 					
-					if (!value.equals("-")
-							&& stock.getValue() != floatValue) {
+					if (!value.equals("-") && stock.getValue() != floatValue) {
 						stock.setValue(floatValue);
 					}
 
@@ -254,11 +325,18 @@ public class SGXWebMarketDataImpl extends MarketData {
 
 					moveToNextValue(jsonParser); // move to percentageChange
 					value = jsonParser.getText();
-					
+
 					if (value.equals(""))
 						floatValue = 0;
-					else
-						floatValue = Float.parseFloat(value);
+					else {
+						try {
+							floatValue = Float.parseFloat(value);
+						}
+						catch (NumberFormatException e) {
+							stock.setHasInvalidData(true);
+							Log.error(this, e.toString());
+						}
+					}
 					
 					if (stock.getPercentChange() != floatValue) {
 						stock.setPercentChange(floatValue);
@@ -269,26 +347,26 @@ public class SGXWebMarketDataImpl extends MarketData {
 
 					Log.debug(this, stock.toString());
 
-					if (stock.wasUpdated()) { // inform subscribers that stock
+					if (stock.wasUpdated()) { // inform subscribers that
+												// stock
 												// has updated fields
-						Log.info(this, "Stock updated "+stock.getStockName()+" ("+stock.getStockCode()+")! Notifying subscribers.");
+						Log.info(this, "Stock updated " + stock.getStockName() + " (" + stock.getStockCode() + ")! Notifying subscribers.");
 						stockChange(stock);
 					}
 				} while (jsonParser.nextToken() != JsonToken.END_OBJECT);
 			}
 
 		} catch (JsonParseException e) {
-			e.printStackTrace();
+			Log.error(this, e.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(this, e.toString());
 		}
 
-		Log.debug(this, "Stock list size: "+marketData.size());
+		Log.debug(this, "Stock list size: " + marketData.size());
 	}
 
 	// Utility method to move to value instead of field followed by value.
-	private void moveToNextValue(JsonParser jsonParser)
-			throws JsonParseException, IOException {
+	private void moveToNextValue(JsonParser jsonParser) throws JsonParseException, IOException {
 		jsonParser.nextToken(); // move to field name
 		jsonParser.nextToken(); // move to value
 	}
