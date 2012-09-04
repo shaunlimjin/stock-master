@@ -33,7 +33,7 @@ public class CSVFileRecorderImpl extends DataRecorder {
 		try {
 			writer = new FileWriter(file, true);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(this, e.toString());
 		}
 	}
 

@@ -45,7 +45,7 @@ public class MongoManager {
 
         } catch (UnknownHostException e) {
             Log.error(this, "Unable to connect to db. Check hostname.");
-            e.printStackTrace();
+            Log.error(this, e.toString());
         }
     }
 
