@@ -15,14 +15,14 @@ import stockmaster.util.Log;
  */
 public class RideTheTideImpl extends TradingAlgorithm {
 
-	public static final int PRICE_TIME_UNIT_QUEUE_SIZE = 10;
+	private static final int PRICE_TIME_UNIT_QUEUE_SIZE = 10;
 
 	// Time to trigger algorithm - in millis
-	public static final long TIME_PERIOD = 5 * 60 * 1000;
+	private static float TIME_PERIOD = 2 * 60 * 1000;
 	// Percentage price increase to trigger BUY
-	public static final float PRICE_INCREASE = 2;
+	private static float PRICE_INCREASE = 5;
 	// Percentage price decrease from highest price to trigger SELL
-	public static final float PRICE_DECREASE_FROM_HIGHEST_PRICE = 2;
+	private static float PRICE_DECREASE_FROM_HIGHEST_PRICE = 2;
 
 	// stockCode, StockUnit pair
 	private Hashtable<String, StockUnit> stockList;
@@ -31,23 +31,32 @@ public class RideTheTideImpl extends TradingAlgorithm {
 		super(stockManager, 30000);
 		stockList = new Hashtable<String, StockUnit>();
 	}
-
+	
 	private void analyze(StockUnit stockUnit) {
-
-		long startTime = System.currentTimeMillis() - TIME_PERIOD;
+		long startTime = stockUnit.getStockData().getLastUpdate().getTime() - (long)TIME_PERIOD;
 
 		// Retrieve price history of a stock
 		LinkedList<PriceTimeUnit> priceHistoryList = stockUnit.getPriceHistoryList();
-		Log.info(this, "Analyzing StockCode: " + stockUnit.getStockData().getStockCode() + " Size: " + priceHistoryList.size() + " (" + System.currentTimeMillis() + " - " + startTime + ")");
+		Log.info(this, "Analyzing StockCode: " + stockUnit.getStockData().getStockCode() + " Price History Size: " + priceHistoryList.size());
 
 		float lastPrice = stockUnit.getStockData().getLastPrice();
 		float highestPrice = stockUnit.getHighestPrice();
 
 		// Check if we need to SELL
 		if ((stockUnit.position > 0) && (highestPrice * ((100 - PRICE_DECREASE_FROM_HIGHEST_PRICE) / 100) > lastPrice)) {
-			Log.write("#### SELL: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") @ $" + priceHistoryList.getFirst().price + "(Start Price: " + stockUnit.getBuyPrice() + ")");
-			Log.info(this, "#### SELL: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") @ $" + priceHistoryList.getFirst().price + "(Start Price: " + stockUnit.getBuyPrice() + ")");
+			Log.info(this, "#### SELL: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") @ $" + lastPrice + " (BUY Price: " + stockUnit.getBuyPrice() + ", Profit: "+(lastPrice-stockUnit.getBuyPrice())+")");
 			stockUnit.position = 0;
+			
+			if (isAlgoTesting) {
+				if (lastPrice-stockUnit.getBuyPrice() > 0) {
+					noOfProfit++;
+					//Log.algoTesting(this, "PROFIT: #### SELL: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") @ $" + lastPrice + " (BUY Price: " + stockUnit.getBuyPrice() + ", Profit: "+(lastPrice-stockUnit.getBuyPrice())+")");
+				}
+				else {
+					noOfLoss++;
+					//Log.algoTesting(this, "LOSS: #### SELL: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") @ $" + lastPrice + " (BUY Price: " + stockUnit.getBuyPrice() + ", Profit: "+(lastPrice-stockUnit.getBuyPrice())+")");
+				}	
+			}
 		} // Check if we hit a new high
 		else if ((stockUnit.position > 0) && (lastPrice > highestPrice)) {
 			stockUnit.setHighestPrice(lastPrice);
@@ -55,35 +64,36 @@ public class RideTheTideImpl extends TradingAlgorithm {
 		else {
 			// Check if price has increased by x% in y time
 			for (PriceTimeUnit unit : priceHistoryList) {
-				Log.info(this, "[Price History] Time/Price: " + unit.time + "/" + unit.price);
-
+				Log.debug(this, "[Price History] Time/Price: " + unit.time + "/" + unit.price);
+				
 				// Check what is the current time vs the last recorded time
 				if (startTime < unit.time) {
 					// compare current price with startTime price - check if it
 					// exceeds x%
 					float percentageChange = 100 * (priceHistoryList.getFirst().price - unit.price) / unit.price;
 					Log.info(this, "[Price History] Percentage Change: " + percentageChange + " (Current Price: " + priceHistoryList.getFirst().price + " Start Price: " + unit.price + ")");
-
+				
 					// decide whether or not to BUY - stock must increase by x%
 					// over specified time
 					if ((percentageChange >= PRICE_INCREASE) && (stockUnit.position == 0)) {
-						Log.write("#### BUY: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") @ $" + priceHistoryList.getFirst().price + "(Start Price: " + unit.price + ")");
-						Log.info(this, "#### BUY: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") @ $" + priceHistoryList.getFirst().price + "(Start Price: " + unit.price + ")");
-						stockUnit.setBuyPrice(priceHistoryList.getFirst().price);
-						stockUnit.setHighestPrice(priceHistoryList.getFirst().price);
+						Log.info(this, "#### BUY: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") @ $" + lastPrice + "(Start Price: " + unit.price + ")");
+						stockUnit.setBuyPrice(lastPrice);
+						stockUnit.setHighestPrice(lastPrice);
 						stockUnit.position = 1;
+						
+	
 					}
 				}
 			}
 		}
 	}
-
+	
 	// When there is any stock changes, analyze whether stock meets our triggers
 	@Override
 	public void stockChange(StockData stockData) {
 		String stockCode = stockData.getStockCode();
 
-		Log.info(this, stockCode + ": Stock data changed!");
+		Log.debug(this, stockCode + ": Stock data changed!");
 
 		if (Log.logLevel == Log.LogLevel.DEBUG)
 			stockData.displayFieldChanges();
@@ -100,13 +110,20 @@ public class RideTheTideImpl extends TradingAlgorithm {
 				stockList.put(stockCode, stockUnit);
 			}
 
-			stockUnit.addInPriceList(stockData.getLastPrice());
+			stockUnit.addInPriceList(stockData.getLastPrice(), stockData.getLastUpdate().getTime());
 
 			// analyze whether stock meets our triggers
 			analyze(stockUnit);
 		}
 	}
-
+	
+	// Prepare algo for test run
+	public void initAlgoTestParameters() {
+		algoTestParameters.put("TIME_PERIOD", new AlgoTestUnit(30000, 10*60000, 30000));
+		algoTestParameters.put("PRICE_INCREASE", new AlgoTestUnit(1.5f, 40, 0.5f));
+		algoTestParameters.put("PRICE_DECREASE_FROM_HIGHEST_PRICE", new AlgoTestUnit(1, 10, 0.5f));
+	}
+	
 	// Entity class to track the price history of a stock. we need this
 	// information to calculate percentage difference
 	class StockUnit {
@@ -161,7 +178,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 			this.position = position;
 		}
 
-		public void addInPriceList(float price) {
+		public void addInPriceList(float price, long time) {
 			PriceTimeUnit unit;
 
 			if (priceHistoryList.size() == PRICE_TIME_UNIT_QUEUE_SIZE) {
@@ -171,7 +188,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 				unit = new PriceTimeUnit();
 
 			unit.price = price;
-			unit.time = System.currentTimeMillis();
+			unit.time = time;
 
 			priceHistoryList.addFirst(unit);
 			Log.debug(this, "Added PriceTimeUnit to priceHistoryList (Size: " + priceHistoryList.size() + ")");
@@ -181,5 +198,10 @@ public class RideTheTideImpl extends TradingAlgorithm {
 	class PriceTimeUnit {
 		float price;
 		long time;
+	}
+
+	@Override
+	public void reset() {
+		stockList.clear();
 	}
 }

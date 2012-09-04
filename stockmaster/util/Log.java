@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -13,12 +14,12 @@ public class Log {
 	public static LogLevel logLevel = LogLevel.INFO;
 	private static String logFile = "StockMaster_";
 	private final static DateFormat dateTimeFormat = new SimpleDateFormat(
-			"yyyyMMdd hh:mm:ss ");
+			"yyyyMMdd hh:mm:ss");
 	
 	private final static SimpleDateFormat dateOnlyFormat = new SimpleDateFormat("yyyyMMdd");
 
 	public enum LogLevel {
-		NONE, INFO, DEBUG, ERROR
+		NONE, INFO, DEBUG, ERROR, ALGO_TESTING
 	}
 
 	public static void debug(Object obj, String msg) {
@@ -29,6 +30,11 @@ public class Log {
 	public static void info(Object obj, String debug) {
 		if ((logLevel == LogLevel.INFO) || (logLevel == LogLevel.DEBUG))
 			msg(obj, debug, "INFO");
+	}
+	
+	public static void algoTesting(Object obj, String debug) {
+		if (logLevel == LogLevel.ALGO_TESTING)
+			msg(obj, debug, "ALGO TESTING");
 	}
 	
 	public static void error(Object obj, String debug) {
@@ -69,7 +75,7 @@ public class Log {
 		try {
 			Date now = new Date();
 			String currentTime = Log.dateTimeFormat.format(now);
-			FileWriter aWriter = new FileWriter(file+getCurrentDate()+".txt", true);
+			FileWriter aWriter = new FileWriter(file+getCurrentDate(new Date())+".txt", true);
 			aWriter.write(currentTime + " " + msg
 					+ System.getProperty("line.separator"));
 			aWriter.flush();
@@ -90,7 +96,20 @@ public class Log {
 		}
 	}
 	
-	public static String getCurrentDate(){
-		return dateOnlyFormat.format(new Date());
+	public static String getCurrentDate(Date date){
+		return dateOnlyFormat.format(date);
+	}
+	
+	public static String formateDateTime(Date date) {
+		return dateTimeFormat.format(date);
+	}
+	
+	public static Date getFormattedDateTime(String date){
+		try {
+			return dateTimeFormat.parse(date);
+		} catch (ParseException e) {
+			Log.error(null,"Invalid date conversion");
+		}
+		return null;
 	}
 }
