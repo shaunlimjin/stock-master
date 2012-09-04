@@ -21,9 +21,12 @@ public class AlgoTester extends StockMaster {
 	public static void main(String[] args) {
 		Log.logLevel = LogLevel.ALGO_TESTING;
 		System.out.println("Starting StockManager in "+Log.logLevel+" mode.");
+		
+		ArrayList<String> dateList = new ArrayList<String>();
+		dateList.add("20120903");
 	
 		// Starts the application using Replayer SGX Web Market Data
-        StockMaster stockMaster = new StockMaster(new ReplayCSVMarketDataImpl("FeedData/","20120903","SGX"));
+        StockMaster stockMaster = new StockMaster(new ReplayCSVMarketDataImpl("FeedData/",dateList,"SGX"));
 
 		// Define algorithm stock manager would use to monitor the market
         RideTheTideImpl rideTheTideAlgo = new RideTheTideImpl(stockMaster);

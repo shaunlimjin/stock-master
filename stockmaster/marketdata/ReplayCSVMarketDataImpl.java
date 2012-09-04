@@ -2,7 +2,7 @@ package stockmaster.marketdata;
 
 import stockmaster.unit.StockData;
 import stockmaster.util.Log;
-
+import java.util.ArrayList;
 import java.io.*;
 
 public class ReplayCSVMarketDataImpl extends MarketData {
@@ -12,9 +12,10 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 	private BufferedReader reader;
 	private FileReader freader;
 	private String[] itemList;
+	private ArrayList<String> fileList;
 	
-	public ReplayCSVMarketDataImpl(String folder, String date, String market) {
-		selectedDate = date;
+	public ReplayCSVMarketDataImpl(String folder, ArrayList<String> date, String market) {
+		fileList = date;
 		selectedMarket = market;
 		selectedFolder = folder;
 	}
@@ -137,6 +138,7 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 						stockData.setVolume(floatValue);
 					}
 					
+					
 					if (stockData.wasUpdated()) { // inform subscribers that stock
 						// has updated fields
 						Log.debug(this, "Stock updated "+stockData.getStockName()+" ("+stockData.getStockCode()+")! Notifying subscribers.");
@@ -173,16 +175,7 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 
 	@Override
 	public void init() {
-		try{
-			dataFile = new File(selectedFolder + "/" + selectedDate + "_" + selectedMarket + ".csv");
-			freader = new FileReader(dataFile);
-			reader = new BufferedReader(freader);
-			
-			marketData.clear();
-		}catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		
 
 	}
 	
@@ -190,6 +183,23 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 	public void start(){
 		Log.debug(this, "Starting market data..");
 		init();
-		populateData();
+		
+		for(String selectedDate: fileList){
+			
+			try{
+				dataFile = new File(selectedFolder + "/" + selectedDate + "_" + selectedMarket + ".csv");
+				freader = new FileReader(dataFile);
+				reader = new BufferedReader(freader);
+				
+				marketData.clear();
+			}catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			populateData();
+			
+		}
+		
+		
 	}
 }
