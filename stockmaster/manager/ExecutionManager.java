@@ -21,4 +21,9 @@ public class ExecutionManager {
 		
 		return instance;
 	}
+	
+	// used in an emergency / application error to cease trading.
+	public void ceaseTradingAndCancelAllOpenOrders() {
+		
+	}
 }

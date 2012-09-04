@@ -23,10 +23,10 @@ public class RiskManager {
 	}
 	
 	public void executeBuy(String stockCode, float price) {
-		
+		//check if stockdata hasInvalidData
 	}
 	
 	public void executeSell(String stockCode, float price) {
-		
+		//check if stockdata hasInvalidData
 	}
 }

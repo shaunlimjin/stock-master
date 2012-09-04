@@ -35,6 +35,7 @@ public class StockData {
 	private float sentiment;
 	private float sentimentWeight;
 	private Calendar lastUpdate;
+	private boolean hasInvalidData; // in case there were errors parsing marketdata, we will flag this stock as untradable.
 	
 	// indicates which field was last updated
     @Transient //don't persist
@@ -286,6 +287,14 @@ public class StockData {
 	
 	public Date getLastUpdate() {
 		return lastUpdate.getTime();
+	}
+	
+	public boolean hasInvalidData() {
+		return hasInvalidData();
+	}
+	
+	public void setHasInvalidData(boolean hasInvalidData) {
+		this.hasInvalidData = hasInvalidData;
 	}
 	
 	public void displayFieldChanges() {

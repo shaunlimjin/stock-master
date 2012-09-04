@@ -28,7 +28,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 	private Hashtable<String, StockUnit> stockList;
 
 	public RideTheTideImpl(StockMaster stockManager) {
-		super(stockManager, 30000);
+		super(stockManager, 20000);
 		stockList = new Hashtable<String, StockUnit>();
 	}
 	
