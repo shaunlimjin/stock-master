@@ -30,11 +30,9 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 		float floatValue;
 		try {
 			while((line = reader.readLine())!=null){			
-				
 				itemList = line.split(",");
                 //if stock does not already exist in marketData's hashtable, put it there.
 				if(!marketData.containsKey(itemList[11])){
-					
 					stockData = new StockData();
 					stockData.setStockCode(itemList[11]);
 					stockData.setStockName(itemList[12]);
@@ -141,7 +139,7 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 					
 					if (stockData.wasUpdated()) { // inform subscribers that stock
 						// has updated fields
-						Log.info(this, "Stock updated "+stockData.getStockName()+" ("+stockData.getStockCode()+")! Notifying subscribers.");
+						Log.debug(this, "Stock updated "+stockData.getStockName()+" ("+stockData.getStockCode()+")! Notifying subscribers.");
 						stockChange(stockData);
 					}
 				
@@ -151,8 +149,18 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 			}
 			Log.debug(this, "Total stock parsed : " + Integer.toString(i));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		finally {
+			try {
+				reader.close();
+			} catch (IOException e) {
+			}
+			
+			try {
+				freader.close();
+			} catch (IOException e) {
+			}
 		}
 
 	}
@@ -169,6 +177,8 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 			dataFile = new File(selectedFolder + "/" + selectedDate + "_" + selectedMarket + ".csv");
 			freader = new FileReader(dataFile);
 			reader = new BufferedReader(freader);
+			
+			marketData.clear();
 		}catch (Exception e)
 		{
 			e.printStackTrace();
@@ -182,5 +192,4 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 		init();
 		populateData();
 	}
-
 }

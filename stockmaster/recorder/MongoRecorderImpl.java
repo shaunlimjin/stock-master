@@ -8,6 +8,7 @@ import stockmaster.unit.StockData;
 import stockmaster.util.Log;
 
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.StringTokenizer;
 
 /**
@@ -21,8 +22,9 @@ public class MongoRecorderImpl extends DataRecorder {
 
     private MongoManager mongoManager = MongoManager.getInstance();
 
-    public MongoRecorderImpl(String market) {
-        mongoManager.setDatastore(market + "_" + Log.getCurrentDate());
+    public MongoRecorderImpl(String market, Date startDate, Date endDate) {
+    	super(startDate, endDate);
+        mongoManager.setDatastore(market + "_" + Log.getCurrentDate(new Date()));
     }
 
     @Override

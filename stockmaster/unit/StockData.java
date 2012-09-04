@@ -4,6 +4,10 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Transient;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import stockmaster.util.Log;
 
 /*
  * Entity class to store Stock details.
@@ -30,6 +34,7 @@ public class StockData {
 	private String stockCode;
 	private float sentiment;
 	private float sentimentWeight;
+	private Calendar lastUpdate;
 	
 	// indicates which field was last updated
     @Transient //don't persist
@@ -58,6 +63,8 @@ public class StockData {
 		fieldChangedList = new ArrayList<FieldChanged>();
 		setSentiment(0);
 		setSentimentWeight(1);
+		
+		lastUpdate = Calendar.getInstance();
 	}
 	
 	
@@ -86,7 +93,7 @@ public class StockData {
 				+ ", buyVolume=" + buyVolume + ", sellVolume=" + sellVolume
 				+ ", volume=" + volume + ", openPrice=" + openPrice
 				+ ", lowPrice=" + lowPrice + ", highPrice=" + highPrice
-				+ ", value=" + value + ", sector=" + sector + "]";
+				+ ", value=" + value + ", sector=" + sector + ", date="+ Log.formateDateTime(lastUpdate.getTime())+"]";
 	}
 
 	private String remarks;
@@ -97,6 +104,7 @@ public class StockData {
 
 	public void setValueChange(float valueChange) {
 		this.valueChange = valueChange;
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
 	public float getPercentChange() {
@@ -106,6 +114,7 @@ public class StockData {
 	public void setPercentChange(float percentChange) {
 		this.percentChange = percentChange;
 		fieldChangedList.add(FieldChanged.PERCENT_CHANGE);
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
 	public float getBuyPrice() {
@@ -115,6 +124,7 @@ public class StockData {
 	public void setBuyPrice(float buyPrice) {
 		this.buyPrice = buyPrice;
 		fieldChangedList.add(FieldChanged.BUY_PRICE);
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
 	public float getSellPrice() {
@@ -124,6 +134,7 @@ public class StockData {
 	public void setSellPrice(float sellPrice) {
 		this.sellPrice = sellPrice;
 		fieldChangedList.add(FieldChanged.SELL_PRICE);
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
 	public float getLastPrice() {
@@ -133,6 +144,7 @@ public class StockData {
 	public void setLastPrice(float lastPrice) {
 		this.lastPrice = lastPrice;
 		fieldChangedList.add(FieldChanged.LAST_PRICE);
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
 	public float getBuyVolume() {
@@ -142,6 +154,7 @@ public class StockData {
 	public void setBuyVolume(float buyVolume) {
 		this.buyVolume = buyVolume;
 		fieldChangedList.add(FieldChanged.BUY_VOLUME);
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
 	public float getSellVolume() {
@@ -151,6 +164,7 @@ public class StockData {
 	public void setSellVolume(float sellVolume) {
 		this.sellVolume = sellVolume;
 		fieldChangedList.add(FieldChanged.SELL_VOLUME);
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
 	public float getVolume() {
@@ -160,6 +174,7 @@ public class StockData {
 	public void setVolume(float volume) {
 		this.volume = volume;
 		fieldChangedList.add(FieldChanged.VOLUME);
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
 	public float getOpenPrice() {
@@ -169,6 +184,7 @@ public class StockData {
 	public void setOpenPrice(float openPrice) {
 		this.openPrice = openPrice;
 		fieldChangedList.add(FieldChanged.OPEN_PRICE);
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
 	public float getLowPrice() {
@@ -178,6 +194,7 @@ public class StockData {
 	public void setLowPrice(float lowPrice) {
 		this.lowPrice = lowPrice;
 		fieldChangedList.add(FieldChanged.LOW_PRICE);
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
 	public float getHighPrice() {
@@ -187,6 +204,7 @@ public class StockData {
 	public void setHighPrice(float highPrice) {
 		this.highPrice = highPrice;
 		fieldChangedList.add(FieldChanged.HIGH_PRICE);
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
 	public float getValue() {
@@ -196,6 +214,7 @@ public class StockData {
 	public void setValue(float value) {
 		this.value = value;
 		fieldChangedList.add(FieldChanged.VALUE);
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
 	public String getSector() {
@@ -205,6 +224,7 @@ public class StockData {
 	public void setSector(String sector) {
 		this.sector = sector;
 		fieldChangedList.add(FieldChanged.SECTOR);
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
 	public String getStockName() {
@@ -214,6 +234,7 @@ public class StockData {
 	public void setStockName(String stockName) {
 		this.stockName = stockName;
 		fieldChangedList.add(FieldChanged.STOCK_NAME);
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
 	public String getStockCode() {
@@ -223,6 +244,7 @@ public class StockData {
 	public void setStockCode(String stockCode) {
 		this.stockCode = stockCode;
 		fieldChangedList.add(FieldChanged.STOCK_CODE);
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
 	public String getRemarks() {
@@ -232,6 +254,7 @@ public class StockData {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 		fieldChangedList.add(FieldChanged.REMARKS);
+		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 	
 	public float getSentiment() {
@@ -253,10 +276,21 @@ public class StockData {
 		this.sentimentWeight = sentimentWeight;
 	}
 
-
+	public void setLastUpdate(long time) {
+		lastUpdate.setTimeInMillis(time);
+	}
+	
+	public void setLastUpdate(Date dateTime) {
+		lastUpdate.setTime(dateTime);
+	}
+	
+	public Date getLastUpdate() {
+		return lastUpdate.getTime();
+	}
+	
 	public void displayFieldChanges() {
-		System.out.println(stockCode+" Field Changes: ");
+		Log.debug(this, stockCode+" Field Changes: ");
 		for (FieldChanged changed : fieldChangedList)
-			System.out.println(changed);
+			Log.debug(this, changed.toString());
 	}
 }
