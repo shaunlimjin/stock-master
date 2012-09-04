@@ -88,13 +88,13 @@ public abstract class TradingAlgorithm implements MarketDataSubscriber {
 			while (!cycleParameters());
 			
 		} catch (SecurityException e) {
-			e.printStackTrace();
+			Log.error(this, e.toString());
 		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
+			Log.error(this, e.toString());
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			Log.error(this, e.toString());
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			Log.error(this, e.toString());
 		}
 		finally {
 			isAlgoTesting = false;
@@ -140,9 +140,9 @@ public abstract class TradingAlgorithm implements MarketDataSubscriber {
 				}
 			}
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			Log.error(this, e.toString());
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			Log.error(this, e.toString());
 		}
 
 		return false;

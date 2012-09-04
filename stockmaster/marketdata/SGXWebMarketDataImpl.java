@@ -32,7 +32,7 @@ public class SGXWebMarketDataImpl extends MarketData {
 		try {
 			jsonURL = new URL("http://sgx.com/JsonRead/JsonData?qryId=RStock&timeout=30&%20noCache=1345409928980.862806.0060484405");
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			Log.error(this, e.toString());
 		}
 
 		jsonFactory = new JsonFactory();
@@ -357,9 +357,9 @@ public class SGXWebMarketDataImpl extends MarketData {
 			}
 
 		} catch (JsonParseException e) {
-			e.printStackTrace();
+			Log.error(this, e.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(this, e.toString());
 		}
 
 		Log.debug(this, "Stock list size: " + marketData.size());
