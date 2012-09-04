@@ -1,8 +1,7 @@
 package stockmaster.db;
 
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.Morphia;
-import com.mongodb.Mongo;
+import com.mongodb.*;
+import stockmaster.unit.StockData;
 import stockmaster.util.Log;
 
 import java.net.UnknownHostException;
@@ -14,24 +13,22 @@ import java.net.UnknownHostException;
  * Time: 6:37 PM
  * Singleton class that manages communication with MongoDB
  * Dependencies: - MongoDB Java driver - mongo-2.8.0.jar
- *               - ORM wrapper for MongoDB - morphia-0.99.jar
  */
 public class MongoManager {
 
     //For Singleton
     private static MongoManager instance = null;
 
+
     //DB hostname here. For now, assuming it's a mongodb instance running on your local machine
     private final String hostname = "localhost";
+    //DB name
+    private final String databaseName = "stockmaster";
 
     //This Mongo object will represent a connection pool. Only one instance is necessary.
     private Mongo mongo;
-
-    //Morphia instance. Will be reused
-    private Morphia morphia;
-
-    //Morphia wrapper around the Mongo java driver
-    private Datastore datastore;
+    private DB database;
+    private DBCollection collection;
 
     /**
      * Establishes connection to MongoDB and creates instance of Morphia.
@@ -40,9 +37,11 @@ public class MongoManager {
         try {
             //Connect to Mongo
             this.mongo = new Mongo(hostname);
+            //Exceptions are raised for network issues, and server errors; waits on a server for the write operation
+            mongo.setWriteConcern(WriteConcern.SAFE);
 
-            //Initialize Morphia instance
-            this.morphia = new Morphia();
+            //Initialize database
+            database = mongo.getDB(databaseName);
 
         } catch (UnknownHostException e) {
             Log.error(this, "Unable to connect to db. Check hostname.");
@@ -63,37 +62,62 @@ public class MongoManager {
     }
 
     /**
-     * Persist object to DB.
-     * @param data Object to persist
+     * Persist StockData object to DB.
+     * @param stockData StockData Object to persist
      */
-    public void save(Object data){
-        if(datastore == null)
-            Log.error(this,"datastore object has not been initialized.");
-        else
-            datastore.save(data);
+    public void saveStockData(StockData stockData){
+
+            BasicDBObject doc = new BasicDBObject();
+
+            doc.put("valueChange", stockData.getValueChange());
+            doc.put("percentChange", stockData.getPercentChange());
+            doc.put("buyPrice", stockData.getBuyPrice());
+            doc.put("sellPrice", stockData.getSellPrice());
+            doc.put("lastPrice", stockData.getLastPrice());
+            doc.put("buyVolume", stockData.getBuyVolume());
+            doc.put("sellVolume", stockData.getSellVolume());
+            doc.put("volume", stockData.getVolume());
+            doc.put("openPrice", stockData.getOpenPrice());
+            doc.put("lowPrice", stockData.getLowPrice());
+            doc.put("highPrice", stockData.getHighPrice());
+            doc.put("value", stockData.getValue());
+            doc.put("sector", stockData.getSector());
+            doc.put("stockName", stockData.getStockName());
+            doc.put("stockCode", stockData.getStockCode());
+            doc.put("sentiment", stockData.getSentiment());
+            doc.put("sentimentWeight", stockData.getSentimentWeight());
+            doc.put("lastUpdate", stockData.getLastUpdate());
+
+            if(collection == null) {
+                Log.error(this, "Collection object has not been intialized.");
+            }
+            else {
+                collection.insert(doc);
+            }
     }
 
-
-    /**
-     * Returns previously initialized datastore object
-     * @return datastore
-     */
-    public Datastore getDatastore() {
-        if(datastore == null)
-            Log.error(this,"datastore object has not been initialized.");
-        return datastore;
+    public DBCollection getCollection() {
+        return collection;
     }
 
     /**
-     * Creates or retrieves datastore if one with the same name already exists
-     * @param name datastore's name
+     * Sets which collection to use.
+     * @param collectionName collection to use
      */
-    public void setDatastore(String name) {
-        if(name == null){
-            Log.error(this, "Unable to set Datastore: name is null.");
-        } else {
-            Log.info(this, "Created Datastore object with name: " + name);
-            this.datastore = morphia.createDatastore(mongo, name);
+    public void setCollection(String collectionName) {
+
+        if(database == null)
+            Log.error(this,"Database object has not been initialized.");
+        else {
+            this.collection = database.getCollection(collectionName);
         }
+    }
+
+    public DB getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(DB database) {
+        this.database = database;
     }
 }

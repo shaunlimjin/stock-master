@@ -1,9 +1,14 @@
 package stockmaster.marketdata;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
 import stockmaster.db.MongoManager;
 import stockmaster.unit.StockData;
 import stockmaster.util.Log;
+
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,25 +21,39 @@ public class ReplayMongoMarketDataImpl extends MarketData{
 
     private MongoManager mongoManager = MongoManager.getInstance();
 
-    //Name of datastore to use, e.g. sgx_20120827
-    private String datastoreName;
+    private String collectionName;
+    private Date startDate;
+    private Date endDate;
 
 
     /**
      * Sets name of datastore to use by concatenating market + date values
      * @param market String representation of market
-     * @param date   String representation of date, in predetermined date format yyyymmdd
+     * @param startDate Start Date
+     * @param endDate End Date
      */
-    public ReplayMongoMarketDataImpl(String market, String date){
-        this.datastoreName = market + "_" + date;
+    public ReplayMongoMarketDataImpl(String market, Date startDate, Date endDate){
+        this.collectionName = market;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     @Override
     public void populateData() {
-        mongoManager.setDatastore(datastoreName);
-        for (StockData stockData : mongoManager.getDatastore().createQuery(StockData.class)) {
-            Log.info(this,"Retrieved " + stockData.getStockName());
-            stockChange(stockData);
+        mongoManager.setCollection(collectionName);
+
+        BasicDBObject query = new BasicDBObject();
+        query.put("lastUpdate", new BasicDBObject("$lt", endDate));
+
+        DBCursor cursor;
+        cursor = mongoManager.getCollection().find(query);
+
+        try {
+            while(cursor.hasNext()) {
+                System.out.println(cursor.next());
+            }
+        } finally {
+            cursor.close();
         }
     }
 

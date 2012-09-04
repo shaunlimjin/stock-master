@@ -23,7 +23,7 @@ public abstract class DataRecorder implements MarketDataSubscriber {
 		if(now.after(startDate) && now.before(endDate)){
 			this.record(stockCode);
 		}else
-			Log.info(this, "Out of recording time range");
+			Log.info(this, "Current DateTime:  " + now  + " is out of recording time range");
 	}
 	
 	//Future implementation can be to a database, xml etc etc...
