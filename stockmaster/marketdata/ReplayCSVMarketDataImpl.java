@@ -4,6 +4,7 @@ import stockmaster.unit.StockData;
 import stockmaster.util.Log;
 
 import java.io.*;
+import java.util.Date;
 
 public class ReplayCSVMarketDataImpl extends MarketData {
 
@@ -28,6 +29,7 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 		int i=0;
 		StockData stockData;
 		float floatValue;
+		Date updated;
 		try {
 			while((line = reader.readLine())!=null){			
 				itemList = line.split(",");
@@ -136,6 +138,10 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 					if(stockData.getVolume()!=floatValue){
 						stockData.setVolume(floatValue);
 					}
+					
+					updated = Log.getFormattedDateTime(itemList[16]);
+					stockData.setLastUpdate(updated);
+					
 					
 					if (stockData.wasUpdated()) { // inform subscribers that stock
 						// has updated fields
