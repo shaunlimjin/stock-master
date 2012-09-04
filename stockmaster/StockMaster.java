@@ -64,8 +64,8 @@ public class StockMaster {
 
 		// Starts the application using Replayer SGX Web Market Data
 		ArrayList<String> dateList = new ArrayList<String>();
-		dateList.add("20120903");
-		//dateList.add("20120904");
+		//dateList.add("20120903");
+		dateList.add("20120904");
         StockMaster stockMaster = new StockMaster(new ReplayCSVMarketDataImpl("FeedData/",dateList,"SGX"));
 
         // Starts the application using Mongo Replayer

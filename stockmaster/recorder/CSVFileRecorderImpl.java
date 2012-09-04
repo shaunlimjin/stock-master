@@ -45,7 +45,7 @@ public class CSVFileRecorderImpl extends DataRecorder {
 						+","+data.getLowPrice()+","+data.getOpenPrice()+","+data.getPercentChange()
 						+","+data.getRemarks()+","+data.getSector()+","+data.getSellPrice()+","+data.getSellVolume()
 						+","+data.getStockCode()+","+data.getStockName()+","+data.getValue()+","+data.getValueChange()
-						+","+data.getVolume()+","+Log.formateDateTime(data.getLastUpdate())+"\n");
+						+","+data.getVolume()+","+Log.formatDateTime(data.getLastUpdate())+"\n");
 				writer.flush();
 			}catch(Exception e){
 				Log.write(e);

@@ -23,7 +23,7 @@ public class AlgoTester extends StockMaster {
 		System.out.println("Starting StockManager in "+Log.logLevel+" mode.");
 		
 		ArrayList<String> dateList = new ArrayList<String>();
-		dateList.add("20120903");
+		dateList.add("20120904");
 	
 		// Starts the application using Replayer SGX Web Market Data
         StockMaster stockMaster = new StockMaster(new ReplayCSVMarketDataImpl("FeedData/",dateList,"SGX"));

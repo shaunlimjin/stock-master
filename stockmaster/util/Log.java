@@ -14,7 +14,7 @@ public class Log {
 	public static LogLevel logLevel = LogLevel.INFO;
 	private static String logFile = "StockMaster_";
 	private final static DateFormat dateTimeFormat = new SimpleDateFormat(
-			"yyyyMMdd hh:mm:ss");
+			"yyyyMMdd HH:mm:ss");
 	
 	private final static SimpleDateFormat dateOnlyFormat = new SimpleDateFormat("yyyyMMdd");
 
@@ -105,7 +105,7 @@ public class Log {
 		return dateOnlyFormat.format(date);
 	}
 	
-	public static String formateDateTime(Date date) {
+	public static String formatDateTime(Date date) {
 		return dateTimeFormat.format(date);
 	}
 	

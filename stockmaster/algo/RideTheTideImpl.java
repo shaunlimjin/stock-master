@@ -35,6 +35,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 	private void analyze(StockUnit stockUnit) {
 		long startTime = stockUnit.getStockData().getLastUpdate().getTime() - (long)TIME_PERIOD;
 
+		System.out.println(Log.formatDateTime(stockUnit.getStockData().getLastUpdate()));
 		// Retrieve price history of a stock
 		LinkedList<PriceTimeUnit> priceHistoryList = stockUnit.getPriceHistoryList();
 		Log.info(this, "Analyzing StockCode: " + stockUnit.getStockData().getStockCode() + " Price History Size: " + priceHistoryList.size());
@@ -119,9 +120,9 @@ public class RideTheTideImpl extends TradingAlgorithm {
 	
 	// Prepare algo for test run
 	public void initAlgoTestParameters() {
-		algoTestParameters.put("TIME_PERIOD", new AlgoTestUnit(30000, 10*60000, 30000));
-		algoTestParameters.put("PRICE_INCREASE", new AlgoTestUnit(1.5f, 40, 0.5f));
-		algoTestParameters.put("PRICE_DECREASE_FROM_HIGHEST_PRICE", new AlgoTestUnit(1, 10, 0.5f));
+		algoTestParameters.put("TIME_PERIOD", new AlgoTestUnit(30000, 6*60000, 30000));
+		algoTestParameters.put("PRICE_INCREASE", new AlgoTestUnit(0.5f, 25, 0.5f));
+		algoTestParameters.put("PRICE_DECREASE_FROM_HIGHEST_PRICE", new AlgoTestUnit(1, 5, 0.5f));
 	}
 	
 	// Entity class to track the price history of a stock. we need this

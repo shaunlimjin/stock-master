@@ -87,7 +87,7 @@ public class StockData {
 				+ ", buyVolume=" + buyVolume + ", sellVolume=" + sellVolume
 				+ ", volume=" + volume + ", openPrice=" + openPrice
 				+ ", lowPrice=" + lowPrice + ", highPrice=" + highPrice
-				+ ", value=" + value + ", sector=" + sector + ", date="+ Log.formateDateTime(lastUpdate.getTime())+"]";
+				+ ", value=" + value + ", sector=" + sector + ", date="+ Log.formatDateTime(lastUpdate.getTime())+"]";
 	}
 
 	private String remarks;
