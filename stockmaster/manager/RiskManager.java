@@ -22,11 +22,11 @@ public class RiskManager {
 		return instance;
 	}
 	
-	public void executeBuy(String stockCode, float price) {
+	public void executeBuy(String stockCode, double price) {
 		//check if stockdata hasInvalidData
 	}
 	
-	public void executeSell(String stockCode, float price) {
+	public void executeSell(String stockCode, double price) {
 		//check if stockdata hasInvalidData
 	}
 }

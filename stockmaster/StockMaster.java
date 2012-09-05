@@ -66,15 +66,15 @@ public class StockMaster {
 		ArrayList<String> dateList = new ArrayList<String>();
 		//dateList.add("20120903");
 		dateList.add("20120904");
-        StockMaster stockMaster = new StockMaster(new ReplayCSVMarketDataImpl("FeedData/",dateList,"SGX"));
+        //StockMaster stockMaster = new StockMaster(new ReplayCSVMarketDataImpl("FeedData/",dateList,"SGX"));
 
         // Starts the application using Mongo Replayer
-        //StockMaster stockMaster = new StockMaster(new ReplayMongoMarketDataImpl("sgx", "20120902"));
+        StockMaster stockMaster = new StockMaster(new ReplayMongoMarketDataImpl("sgx", Log.getFormattedDateTime("20120904 22:00:00"), Log.getFormattedDateTime("20120904 22:15:00")));
 
 		//Define recorder to use with marketData
 		//Datetime format yyyyMMdd hh:mm:ss 
 		//stockMaster.loadRecorder(new CSVFileRecorderImpl("", "SGX", Log.getFormattedDateTime("20120904 08:58:00"), Log.getFormattedDateTime("20120904 17:05:00")));
-		//stockMaster.loadRecorder(new MongoRecorderImpl("sgx", Log.getFormattedDateTime("20120904 08:58:00"), Log.getFormattedDateTime("20120904 17:05:00")));
+		//stockMaster.loadRecorder(new MongoRecorderImpl("sgx", Log.getFormattedDateTime("20120904 08:58:00"), Log.getFormattedDateTime("20120906 17:05:00")));
 		
 		// Define algorithm stock manager would use to monitor the market
         //stockMaster.loadAlgo(new RideTheTideImpl(stockMaster));	

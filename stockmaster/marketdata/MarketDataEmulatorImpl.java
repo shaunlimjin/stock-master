@@ -27,7 +27,7 @@ public class MarketDataEmulatorImpl extends MarketData {
 	
 	@Override
 	public void populateData() {
-		float noOfStockUpdates = ((float) Math.random()*NUMBER_OF_STOCKS_PER_UPDATE);
+		double noOfStockUpdates = ((double) Math.random()*NUMBER_OF_STOCKS_PER_UPDATE);
 		
 		Log.debug(this, "Changing the prices of "+noOfStockUpdates+" stocks.");
 		
@@ -35,12 +35,12 @@ public class MarketDataEmulatorImpl extends MarketData {
 			String stockCode = ((int)(Math.random()*GENERATE_NUMBER_OF_STOCKS))+"";
 			StockData stockData = marketData.get(stockCode);
 			
-			float price = 0;
+			double price = 0;
 			
-			price = (float)((Math.random()*stockData.getBuyPrice())*0.05);
+			price = (double)((Math.random()*stockData.getBuyPrice())*0.05);
 			
 			// 50-50 chance of price increasing/decreasing
-			float weight;
+			double weight;
 			
 			if (marketSentiment == Market.BULL)
 				weight = 0.7f;
@@ -88,7 +88,7 @@ public class MarketDataEmulatorImpl extends MarketData {
 			stockData.setStockCode(i+"");
 			stockData.setStockName(i+"");
 						
-			float buyPrice = (float)Math.random()*MAX_PRICE_OF_STOCK;
+			double buyPrice = (double)Math.random()*MAX_PRICE_OF_STOCK;
 			stockData.setBuyPrice(buyPrice);
 			stockData.setSellPrice(buyPrice+1);
 			stockData.setLastPrice(buyPrice);

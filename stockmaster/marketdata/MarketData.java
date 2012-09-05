@@ -36,10 +36,10 @@ public abstract class MarketData {
 	private ArrayList<MarketDataSubscriber> subscriptionList;
 	
 	//Sentiment value of the entire market
-	private float overallSentiment;
+	private double overallSentiment;
 	
 	//Sentiment values of the individual counters
-	private Hashtable<String, Float> marketSentiment;
+	private Hashtable<String, Double> marketSentiment;
 	
 	public MarketData() {
 		this(DEFAULT_REFRESH_TIME, DEFAULT_EVENT_TIMEOUT);
@@ -49,7 +49,7 @@ public abstract class MarketData {
 		subscriptionList = new ArrayList<MarketDataSubscriber>();
 		marketData = new Hashtable<String, StockData>();
 		workerThread = new WorkerThread(refreshTime, eventTimeout);	
-		marketSentiment = new Hashtable<String, Float>();
+		marketSentiment = new Hashtable<String, Double>();
 	}
 	
 	// Populate hashtable of stocks with latest prices
@@ -59,16 +59,16 @@ public abstract class MarketData {
 		return marketData;
 	}
 	
-	public Hashtable<String, Float> getMarketSentiment() {
+	public Hashtable<String, Double> getMarketSentiment() {
 		return marketSentiment;
 	}
 
 	// retrieve market sentiment
-	public float getOverallSentiment() {
+	public double getOverallSentiment() {
 		return overallSentiment;
 	}
 
-	public void setOverallSentiment(float f) {
+	public void setOverallSentiment(double f) {
 		this.overallSentiment = f;
 	}
 	
@@ -80,7 +80,7 @@ public abstract class MarketData {
 	public void calculateSentiment(StockData data){
 		
 			if(marketSentiment.containsKey(data.getStockCode())){
-				float value = marketSentiment.get(data.getStockCode());
+				double value = marketSentiment.get(data.getStockCode());
 					Log.debug(this, "Old Price :" + value);
 					Log.debug(this, "New Price :" + data.getLastPrice());
 					

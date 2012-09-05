@@ -35,11 +35,11 @@ public abstract class TradingAlgorithm implements MarketDataSubscriber {
 		stockManager.getMarketData().subscribe(this);
 	}
 
-	public void executeBuy(String stockCode, float price) {
+	public void executeBuy(String stockCode, double price) {
 		riskManager.executeSell(stockCode, price);
 	}
 	
-	public void executeSell(String stockCode, float price) {
+	public void executeSell(String stockCode, double price) {
 		riskManager.executeSell(stockCode, price);
 	}
 	
@@ -65,7 +65,7 @@ public abstract class TradingAlgorithm implements MarketDataSubscriber {
 			for (String fieldName : algoTestParameters.keySet()) {
 				Field field = c.getDeclaredField(fieldName);
 				field.setAccessible(true);
-				field.setFloat(this, algoTestParameters.get(fieldName).MIN_VALUE);
+				field.setDouble(this, algoTestParameters.get(fieldName).MIN_VALUE);
 				algoTestParameters.get(fieldName).ALGO_FIELD = field;
 				
 				Log.algoTesting(this, fieldName+": "+algoTestParameters.get(fieldName).MIN_VALUE+", "+algoTestParameters.get(fieldName).MAX_VALUE+", "+algoTestParameters.get(fieldName).INCREMENT);
@@ -75,7 +75,7 @@ public abstract class TradingAlgorithm implements MarketDataSubscriber {
 				Log.algoTesting(this, "[Testing Parameters]");
 				
 				for (String fieldName : algoTestParameters.keySet()) {
-					Log.algoTesting(this, fieldName+":"+algoTestParameters.get(fieldName).ALGO_FIELD.getFloat(this));
+					Log.algoTesting(this, fieldName+":"+algoTestParameters.get(fieldName).ALGO_FIELD.getDouble(this));
 				}	
 				stockManager.getMarketData().start();
 				
@@ -109,7 +109,7 @@ public abstract class TradingAlgorithm implements MarketDataSubscriber {
 			// terminating condition
 			boolean overallCondition = true;
 			for (AlgoTestUnit algoUnit : algoTestParameters.values()) {
-				if (algoUnit.ALGO_FIELD.getFloat(this) >= algoUnit.MAX_VALUE);
+				if (algoUnit.ALGO_FIELD.getDouble(this) >= algoUnit.MAX_VALUE);
 				else {
 					overallCondition = false;
 					break;
@@ -124,18 +124,18 @@ public abstract class TradingAlgorithm implements MarketDataSubscriber {
 			
 			// move first algo unit to the next increment
 			AlgoTestUnit algoUnit = (AlgoTestUnit) algoUnitArray[0];
-			algoUnit.ALGO_FIELD.setFloat(this, algoUnit.ALGO_FIELD.getFloat(this) + algoUnit.INCREMENT);
+			algoUnit.ALGO_FIELD.setDouble(this, algoUnit.ALGO_FIELD.getDouble(this) + algoUnit.INCREMENT);
 			
 			// logic to reset algo_field to min value
 			for (int i = 0; i < algoUnitArray.length; i++) {
 				algoUnit = (AlgoTestUnit) algoUnitArray[i];
 				
-				if (algoUnit.ALGO_FIELD.getFloat(this) > algoUnit.MAX_VALUE) {
-					algoUnit.ALGO_FIELD.setFloat(this, algoUnit.MIN_VALUE);
+				if (algoUnit.ALGO_FIELD.getDouble(this) > algoUnit.MAX_VALUE) {
+					algoUnit.ALGO_FIELD.setDouble(this, algoUnit.MIN_VALUE);
 					
 					if ((i+1) < algoUnitArray.length) {
 						algoUnit = (AlgoTestUnit) algoUnitArray[i+1]; // get next
-						algoUnit.ALGO_FIELD.setFloat(this, algoUnit.ALGO_FIELD.getFloat(this) + algoUnit.INCREMENT);
+						algoUnit.ALGO_FIELD.setDouble(this, algoUnit.ALGO_FIELD.getDouble(this) + algoUnit.INCREMENT);
 					}
 				}
 			}
@@ -150,14 +150,14 @@ public abstract class TradingAlgorithm implements MarketDataSubscriber {
 
 	// Class used for automated algo testing
 	class AlgoTestUnit {
-		float MIN_VALUE;
-		float MAX_VALUE;
-		float INCREMENT;
+		double MIN_VALUE;
+		double MAX_VALUE;
+		double INCREMENT;
 
 		// corresponding field of algo parameter
 		Field ALGO_FIELD;
 
-		public AlgoTestUnit(float minValue, float maxValue, float increment) {
+		public AlgoTestUnit(double minValue, double maxValue, double increment) {
 			MIN_VALUE = minValue;
 			MAX_VALUE = maxValue;
 			INCREMENT = increment;

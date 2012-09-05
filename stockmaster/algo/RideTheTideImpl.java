@@ -18,13 +18,13 @@ public class RideTheTideImpl extends TradingAlgorithm {
 	private static final int PRICE_TIME_UNIT_QUEUE_SIZE = 10;
 
 	// Time to trigger algorithm - in millis
-	private static float TIME_PERIOD = 2 * 60 * 1000;
+	private static double TIME_PERIOD = 2 * 60 * 1000;
 	// Percentage price increase to trigger BUY
-	private static float PRICE_INCREASE = 5;
+	private static double PRICE_INCREASE = 5;
 	// Percentage price decrease from highest price to trigger SELL
-	private static float PRICE_DECREASE_FROM_HIGHEST_PRICE = 2;
+	private static double PRICE_DECREASE_FROM_HIGHEST_PRICE = 2;
 	// Minimum price we should monitor
-	private static float MINIMUM_PRICE = 5;
+	private static double MINIMUM_PRICE = 5;
 
 	// stockCode, StockUnit pair
 	private Hashtable<String, StockUnit> stockList;
@@ -41,8 +41,8 @@ public class RideTheTideImpl extends TradingAlgorithm {
 		LinkedList<PriceTimeUnit> priceHistoryList = stockUnit.getPriceHistoryList();
 		Log.info(this, "Analyzing StockCode: " + stockUnit.getStockData().getStockCode() + " Price History Size: " + priceHistoryList.size());
 
-		float lastPrice = stockUnit.getStockData().getLastPrice();
-		float highestPrice = stockUnit.getHighestPrice();
+		double lastPrice = stockUnit.getStockData().getLastPrice();
+		double highestPrice = stockUnit.getHighestPrice();
 
 		// Check if we need to SELL
 		if ((stockUnit.position > 0) && (highestPrice * ((100 - PRICE_DECREASE_FROM_HIGHEST_PRICE) / 100) > lastPrice)) {
@@ -72,7 +72,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 				if (startTime < unit.time) {
 					// compare current price with startTime price - check if it
 					// exceeds x%
-					float percentageChange = 100 * (priceHistoryList.getFirst().price - unit.price) / unit.price;
+					double percentageChange = 100 * (priceHistoryList.getFirst().price - unit.price) / unit.price;
 					Log.info(this, "[Price History] Percentage Change: " + percentageChange + " (Current Price: " + priceHistoryList.getFirst().price + " Start Price: " + unit.price + ")");
 				
 					// decide whether or not to BUY - stock must increase by x%
@@ -136,8 +136,8 @@ public class RideTheTideImpl extends TradingAlgorithm {
 	class StockUnit {
 		private LinkedList<PriceTimeUnit> priceHistoryList;
 		private StockData stockData;
-		private float highestPrice;
-		private float buyPrice;
+		private double highestPrice;
+		private double buyPrice;
 		private int position;
 
 		public StockUnit(StockData stockData) {
@@ -165,19 +165,19 @@ public class RideTheTideImpl extends TradingAlgorithm {
 			return position;
 		}
 
-		public float getBuyPrice() {
+		public double getBuyPrice() {
 			return buyPrice;
 		}
 
-		public void setBuyPrice(float price) {
+		public void setBuyPrice(double price) {
 			buyPrice = price;
 		}
 
-		public void setHighestPrice(float price) {
+		public void setHighestPrice(double price) {
 			highestPrice = price;
 		}
 
-		public float getHighestPrice() {
+		public double getHighestPrice() {
 			return highestPrice;
 		}
 
@@ -185,7 +185,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 			this.position = position;
 		}
 
-		public void addInPriceList(float price, long time) {
+		public void addInPriceList(double price, long time) {
 			PriceTimeUnit unit;
 
 			if (priceHistoryList.size() == PRICE_TIME_UNIT_QUEUE_SIZE) {
@@ -203,7 +203,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 	}
 
 	class PriceTimeUnit {
-		float price;
+		double price;
 		long time;
 	}
 

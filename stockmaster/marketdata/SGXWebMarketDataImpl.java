@@ -104,13 +104,13 @@ public class SGXWebMarketDataImpl extends MarketData {
 					moveToNextValue(jsonParser); // move to Last Traded;
 					value = jsonParser.getText();
 
-					float floatValue = 0;
+					double doubleValue = 0;
 
 					if (value.equals(""))
-						floatValue = 0;
+						doubleValue = 0;
 					else {
 						try {
-							floatValue = Float.parseFloat(value);
+							doubleValue = Double.parseDouble(value);
 						}
 						catch (NumberFormatException e) {
 							stock.setHasInvalidData(true);
@@ -118,18 +118,18 @@ public class SGXWebMarketDataImpl extends MarketData {
 						}
 					}
 					
-					if (stock.getLastPrice() != floatValue) {
-						stock.setLastPrice(floatValue);
+					if (stock.getLastPrice() != doubleValue) {
+						stock.setLastPrice(doubleValue);
 					}
 
 					moveToNextValue(jsonParser); // move to Change
 					value = jsonParser.getText();
 
 					if (value.equals(""))
-						floatValue = 0;
+						doubleValue = 0;
 					else {
 						try {
-							floatValue = Float.parseFloat(value);
+							doubleValue = Double.parseDouble(value);
 						}
 						catch (NumberFormatException e) {
 							stock.setHasInvalidData(true);
@@ -137,18 +137,18 @@ public class SGXWebMarketDataImpl extends MarketData {
 						}
 					}
 					
-					if (stock.getValueChange() != floatValue) {
-						stock.setValueChange(floatValue);
+					if (stock.getValueChange() != doubleValue) {
+						stock.setValueChange(doubleValue);
 					}
 
 					moveToNextValue(jsonParser); // move to volume
 					value = jsonParser.getText();
 
 					if (value.equals(""))
-						floatValue = 0;
+						doubleValue = 0;
 					else {
 						try {
-							floatValue = Float.parseFloat(value);
+							doubleValue = Double.parseDouble(value);
 						}
 						catch (NumberFormatException e) {
 							stock.setHasInvalidData(true);
@@ -157,18 +157,18 @@ public class SGXWebMarketDataImpl extends MarketData {
 					}
 						
 
-					if (stock.getVolume() != floatValue) {
-						stock.setVolume(floatValue);
+					if (stock.getVolume() != doubleValue) {
+						stock.setVolume(doubleValue);
 					}
 
 					moveToNextValue(jsonParser); // move to buyVolume
 					value = jsonParser.getText();
 
 					if (value.equals(""))
-						floatValue = 0;
+						doubleValue = 0;
 					else {
 						try {
-							floatValue = Float.parseFloat(value);
+							doubleValue = Double.parseDouble(value);
 						}
 						catch (NumberFormatException e) {
 							stock.setHasInvalidData(true);
@@ -176,8 +176,8 @@ public class SGXWebMarketDataImpl extends MarketData {
 						}
 					}
 					
-					if (stock.getBuyVolume() != floatValue) {
-						stock.setBuyVolume(floatValue);
+					if (stock.getBuyVolume() != doubleValue) {
+						stock.setBuyVolume(doubleValue);
 					}
 
 					moveToNextValue(jsonParser); // move to buy
@@ -185,10 +185,10 @@ public class SGXWebMarketDataImpl extends MarketData {
 					value = jsonParser.getText();
 
 					if (value.equals(""))
-						floatValue = 0;
+						doubleValue = 0;
 					else {
 						try {
-							floatValue = Float.parseFloat(value);
+							doubleValue = Double.parseDouble(value);
 						}
 						catch (NumberFormatException e) {
 							stock.setHasInvalidData(true);
@@ -196,18 +196,18 @@ public class SGXWebMarketDataImpl extends MarketData {
 						}
 					}
 					
-					if (stock.getBuyPrice() != floatValue) {
-						stock.setBuyPrice(floatValue);
+					if (stock.getBuyPrice() != doubleValue) {
+						stock.setBuyPrice(doubleValue);
 					}
 
 					moveToNextValue(jsonParser); // move to sell
 					value = jsonParser.getText();
 
 					if (value.equals(""))
-						floatValue = 0;
+						doubleValue = 0;
 					else {
 						try {
-							floatValue = Float.parseFloat(value);
+							doubleValue = Double.parseDouble(value);
 						}
 						catch (NumberFormatException e) {
 							stock.setHasInvalidData(true);
@@ -215,18 +215,18 @@ public class SGXWebMarketDataImpl extends MarketData {
 						}
 					}
 
-					if (stock.getSellPrice() != floatValue) {
-						stock.setSellPrice(floatValue);
+					if (stock.getSellPrice() != doubleValue) {
+						stock.setSellPrice(doubleValue);
 					}
 
 					moveToNextValue(jsonParser); // move to sell volume
 					value = jsonParser.getText();
 
 					if (value.equals(""))
-						floatValue = 0;
+						doubleValue = 0;
 					else {
 						try {
-							floatValue = Float.parseFloat(value);
+							doubleValue = Double.parseDouble(value);
 						}
 						catch (NumberFormatException e) {
 							stock.setHasInvalidData(true);
@@ -234,18 +234,18 @@ public class SGXWebMarketDataImpl extends MarketData {
 						}
 					}
 					
-					if (stock.getSellVolume() != floatValue) {
-						stock.setSellVolume(floatValue);
+					if (stock.getSellVolume() != doubleValue) {
+						stock.setSellVolume(doubleValue);
 					}
 
 					moveToNextValue(jsonParser); // move to open
 					value = jsonParser.getText();
 
 					if (value.equals(""))
-						floatValue = 0;
+						doubleValue = 0;
 					else {
 						try {
-							floatValue = Float.parseFloat(value);
+							doubleValue = Double.parseDouble(value);
 						}
 						catch (NumberFormatException e) {
 							stock.setHasInvalidData(true);
@@ -253,18 +253,18 @@ public class SGXWebMarketDataImpl extends MarketData {
 						}
 					}
 					
-					if (!value.equals("-") && stock.getOpenPrice() != floatValue) {
-						stock.setOpenPrice(floatValue);
+					if (!value.equals("-") && stock.getOpenPrice() != doubleValue) {
+						stock.setOpenPrice(doubleValue);
 					}
 
 					moveToNextValue(jsonParser); // move to high
 					value = jsonParser.getText();
 
 					if (value.equals(""))
-						floatValue = 0;
+						doubleValue = 0;
 					else {
 						try {
-							floatValue = Float.parseFloat(value);
+							doubleValue = Double.parseDouble(value);
 						}
 						catch (NumberFormatException e) {
 							stock.setHasInvalidData(true);
@@ -272,18 +272,18 @@ public class SGXWebMarketDataImpl extends MarketData {
 						}
 					}
 					
-					if (!value.equals("-") && stock.getHighPrice() != floatValue) {
-						stock.setHighPrice(floatValue);
+					if (!value.equals("-") && stock.getHighPrice() != doubleValue) {
+						stock.setHighPrice(doubleValue);
 					}
 
 					moveToNextValue(jsonParser); // move to low
 					value = jsonParser.getText();
 
 					if (value.equals(""))
-						floatValue = 0;
+						doubleValue = 0;
 					else {
 						try {
-							floatValue = Float.parseFloat(value);
+							doubleValue = Double.parseDouble(value);
 						}
 						catch (NumberFormatException e) {
 							stock.setHasInvalidData(true);
@@ -291,18 +291,18 @@ public class SGXWebMarketDataImpl extends MarketData {
 						}
 					}
 					
-					if (!value.equals("-") && stock.getLowPrice() != floatValue) {
-						stock.setLowPrice(floatValue);
+					if (!value.equals("-") && stock.getLowPrice() != doubleValue) {
+						stock.setLowPrice(doubleValue);
 					}
 
 					moveToNextValue(jsonParser); // move to value
 					value = jsonParser.getText();
 
 					if (value.equals(""))
-						floatValue = 0;
+						doubleValue = 0;
 					else {
 						try {
-							floatValue = Float.parseFloat(value);
+							doubleValue = Double.parseDouble(value);
 						}
 						catch (NumberFormatException e) {
 							stock.setHasInvalidData(true);
@@ -310,8 +310,8 @@ public class SGXWebMarketDataImpl extends MarketData {
 						}
 					}
 					
-					if (!value.equals("-") && stock.getValue() != floatValue) {
-						stock.setValue(floatValue);
+					if (!value.equals("-") && stock.getValue() != doubleValue) {
+						stock.setValue(doubleValue);
 					}
 
 					moveToNextValue(jsonParser); // move to sector
@@ -327,10 +327,10 @@ public class SGXWebMarketDataImpl extends MarketData {
 					value = jsonParser.getText();
 
 					if (value.equals(""))
-						floatValue = 0;
+						doubleValue = 0;
 					else {
 						try {
-							floatValue = Float.parseFloat(value);
+							doubleValue = Double.parseDouble(value);
 						}
 						catch (NumberFormatException e) {
 							stock.setHasInvalidData(true);
@@ -338,8 +338,8 @@ public class SGXWebMarketDataImpl extends MarketData {
 						}
 					}
 					
-					if (stock.getPercentChange() != floatValue) {
-						stock.setPercentChange(floatValue);
+					if (stock.getPercentChange() != doubleValue) {
+						stock.setPercentChange(doubleValue);
 					}
 
 					moveToNextValue(jsonParser); // move to P_?

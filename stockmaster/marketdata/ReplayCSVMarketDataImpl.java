@@ -29,7 +29,7 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 	public void populateData() {
 		int i=0;
 		StockData stockData;
-		float floatValue;
+		double doubleValue;
 		Date updated;
 		try {
 			while((line = reader.readLine())!=null){			
@@ -48,50 +48,50 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 					stockData = marketData.get(itemList[11]);
 					stockData.clearFieldChangedList();
 					
-					floatValue = Float.parseFloat(itemList[0]);
+					doubleValue = Double.parseDouble(itemList[0]);
 
-					if(stockData.getBuyPrice()!=floatValue){
-						stockData.setBuyPrice(floatValue);
+					if(stockData.getBuyPrice()!=doubleValue){
+						stockData.setBuyPrice(doubleValue);
 					}
 					
-					floatValue = Float.parseFloat(itemList[1]);
+					doubleValue = Double.parseDouble(itemList[1]);
 					
-					if(stockData.getBuyVolume()!=floatValue){
-						stockData.setBuyVolume(floatValue);
-					}
-					
-
-					floatValue = Float.parseFloat(itemList[2]);
-					
-					if(stockData.getHighPrice()!=floatValue){
-						stockData.setHighPrice(floatValue);
+					if(stockData.getBuyVolume()!=doubleValue){
+						stockData.setBuyVolume(doubleValue);
 					}
 					
 
-					floatValue = Float.parseFloat(itemList[3]);
+					doubleValue = Double.parseDouble(itemList[2]);
 					
-					if(stockData.getLastPrice()!=floatValue){
-						stockData.setLastPrice(floatValue);
+					if(stockData.getHighPrice()!=doubleValue){
+						stockData.setHighPrice(doubleValue);
 					}
 					
 
-					floatValue = Float.parseFloat(itemList[4]);
+					doubleValue = Double.parseDouble(itemList[3]);
 					
-					if(stockData.getLowPrice()!=floatValue){
-						stockData.setLowPrice(floatValue);
+					if(stockData.getLastPrice()!=doubleValue){
+						stockData.setLastPrice(doubleValue);
 					}
 					
-					floatValue = Float.parseFloat(itemList[5]);
+
+					doubleValue = Double.parseDouble(itemList[4]);
 					
-					if(stockData.getOpenPrice()!=floatValue){
-						stockData.setOpenPrice(floatValue);
+					if(stockData.getLowPrice()!=doubleValue){
+						stockData.setLowPrice(doubleValue);
+					}
+					
+					doubleValue = Double.parseDouble(itemList[5]);
+					
+					if(stockData.getOpenPrice()!=doubleValue){
+						stockData.setOpenPrice(doubleValue);
 					}
 					
 	
-					floatValue = Float.parseFloat(itemList[6]);
+					doubleValue = Double.parseDouble(itemList[6]);
 					
-					if(stockData.getPercentChange()!=floatValue){
-						stockData.setPercentChange(floatValue);
+					if(stockData.getPercentChange()!=doubleValue){
+						stockData.setPercentChange(doubleValue);
 					}
 					
 					
@@ -105,39 +105,39 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 					}
 					
 
-					floatValue = Float.parseFloat(itemList[9]);
+					doubleValue = Double.parseDouble(itemList[9]);
 					
-					if(stockData.getSellPrice()!=floatValue){
-						stockData.setSellPrice(floatValue);
+					if(stockData.getSellPrice()!=doubleValue){
+						stockData.setSellPrice(doubleValue);
 					}
 					
 
-					floatValue = Float.parseFloat(itemList[10]);
+					doubleValue = Double.parseDouble(itemList[10]);
 					
-					if(stockData.getSellVolume()!=floatValue){
-						stockData.setSellVolume(floatValue);
+					if(stockData.getSellVolume()!=doubleValue){
+						stockData.setSellVolume(doubleValue);
 					}
 					
 					
 
-					floatValue = Float.parseFloat(itemList[13]);
+					doubleValue = Double.parseDouble(itemList[13]);
 					
-					if(stockData.getValue()!=floatValue){
-						stockData.setValue(floatValue);
+					if(stockData.getValue()!=doubleValue){
+						stockData.setValue(doubleValue);
 					}
 					
 
-					floatValue = Float.parseFloat(itemList[14]);
+					doubleValue = Double.parseDouble(itemList[14]);
 					
-					if(stockData.getValueChange()!=floatValue){
-						stockData.setValueChange(floatValue);
+					if(stockData.getValueChange()!=doubleValue){
+						stockData.setValueChange(doubleValue);
 					}
 					
 
-					floatValue = Float.parseFloat(itemList[15]);
+					doubleValue = Double.parseDouble(itemList[15]);
 					
-					if(stockData.getVolume()!=floatValue){
-						stockData.setVolume(floatValue);
+					if(stockData.getVolume()!=doubleValue){
+						stockData.setVolume(doubleValue);
 					}
 
 					updated = Log.getFormattedDateTime(itemList[16]);

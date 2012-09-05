@@ -1,13 +1,11 @@
 package stockmaster.marketdata;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.Mongo;
+import com.mongodb.*;
 import stockmaster.db.MongoManager;
 import stockmaster.unit.StockData;
 import stockmaster.util.Log;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -17,7 +15,7 @@ import java.util.Date;
  * Time: 6:16 PM
  * Replays market data stored in MongoDB.
  */
-public class ReplayMongoMarketDataImpl extends MarketData{
+public class ReplayMongoMarketDataImpl extends MarketData {
 
     private MongoManager mongoManager = MongoManager.getInstance();
 
@@ -28,11 +26,12 @@ public class ReplayMongoMarketDataImpl extends MarketData{
 
     /**
      * Sets name of datastore to use by concatenating market + date values
-     * @param market String representation of market
+     *
+     * @param market    String representation of market
      * @param startDate Start Date
-     * @param endDate End Date
+     * @param endDate   End Date
      */
-    public ReplayMongoMarketDataImpl(String market, Date startDate, Date endDate){
+    public ReplayMongoMarketDataImpl(String market, Date startDate, Date endDate) {
         this.collectionName = market;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -42,17 +41,65 @@ public class ReplayMongoMarketDataImpl extends MarketData{
     public void populateData() {
         mongoManager.setCollection(collectionName);
 
+        //Specifying that records returned should be greater than startDate and less than endDate
         BasicDBObject query = new BasicDBObject();
-        query.put("lastUpdate", new BasicDBObject("$lt", endDate));
+        query.put("lastUpdate", new BasicDBObject("$gte", startDate).append("$lte", endDate));
+        Log.info(this, "Start date: " + startDate + " End Date: " + endDate);
+        Log.info(this, "MongoDB Query String: " + query.toString());
 
         DBCursor cursor;
         cursor = mongoManager.getCollection().find(query);
 
         try {
-            while(cursor.hasNext()) {
-                System.out.println(cursor.next());
+            while (cursor.hasNext()) {
+                //retrieve current record
+                DBObject object = cursor.next();
+
+                StockData stockData;
+                String stockCode = (String) object.get("stockCode");
+
+                //if stock does not already exist in marketData's hashtable, put it there.
+                if (!marketData.containsKey(stockCode)) {
+                    stockData = new StockData();
+                    stockData.setStockCode(stockCode);
+                    stockData.setStockName((String) object.get("stockName"));
+
+                    marketData.put(stockData.getStockCode(), stockData);
+                }
+
+                //if stock exists, retrieve from hashtable
+                stockData = marketData.get(stockCode);
+                stockData.clearFieldChangedList();
+
+                stockData.setValueChange((Double) object.get("valueChange"));
+                stockData.setPercentChange((Double) object.get("percentChange"));
+                stockData.setBuyPrice((Double) object.get("buyPrice"));
+                stockData.setSellPrice((Double) object.get("sellPrice"));
+                stockData.setLastPrice((Double) object.get("lastPrice"));
+                stockData.setBuyVolume((Double) object.get("buyVolume"));
+                stockData.setSellVolume((Double) object.get("sellVolume"));
+                stockData.setVolume((Double) object.get("volume"));
+                stockData.setOpenPrice((Double) object.get("openPrice"));
+                stockData.setLowPrice((Double) object.get("lowPrice"));
+                stockData.setHighPrice((Double) object.get("highPrice"));
+                stockData.setValue((Double) object.get("value"));
+                stockData.setSector((String) object.get("sector"));
+                stockData.setSentiment((Double) object.get("sentiment"));
+                stockData.setSentimentWeight((Double) object.get("sentimentWeight"));
+                stockData.setLastUpdate((Date) object.get("lastUpdate"));
+
+                Log.debug(this, "Stock Code: " + stockData.getStockCode() + " Last Update: " + String.valueOf(stockData.getLastUpdate()));
+
+                if(stockData.wasUpdated()) { // inform subscribers that stock
+                    // has updated fields
+                    Log.debug(this, "Stock updated " + stockData.getStockName() + " (" + stockData.getStockCode() + ")! Notifying subscribers.");
+                    stockChange(stockData);
+                }
+
+
             }
         } finally {
+            Log.debug(this, "Total records retrieved by query: " + String.valueOf(cursor.count()));
             cursor.close();
         }
     }
@@ -71,7 +118,7 @@ public class ReplayMongoMarketDataImpl extends MarketData{
      * Similar to ReplayCSVMarketDataImpl, overwrite this method so worker thread doesn't get started
      */
     @Override
-    public void start(){
+    public void start() {
         Log.debug(this, "Starting market data..");
         init();
         populateData();

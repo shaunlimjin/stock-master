@@ -11,23 +11,23 @@ import stockmaster.util.Log;
  */
 
 public class StockData {
-	private float valueChange;
-	private float percentChange;
-	private float buyPrice;
-	private float sellPrice;
-	private float lastPrice;
-	private float buyVolume;
-	private float sellVolume;
-	private float volume;
-	private float openPrice;
-	private float lowPrice;
-	private float highPrice;
-	private float value;
+	private double valueChange;
+	private double percentChange;
+	private double buyPrice;
+	private double sellPrice;
+	private double lastPrice;
+	private double buyVolume;
+	private double sellVolume;
+	private double volume;
+	private double openPrice;
+	private double lowPrice;
+	private double highPrice;
+	private double value;
 	private String sector;
 	private String stockName;
 	private String stockCode;
-	private float sentiment;
-	private float sentimentWeight;
+	private double sentiment;
+	private double sentimentWeight;
 	private Calendar lastUpdate;
 	private boolean hasInvalidData; // in case there were errors parsing marketdata, we will flag this stock as untradable.
 	
@@ -92,120 +92,120 @@ public class StockData {
 
 	private String remarks;
 	
-	public float getValueChange() {
+	public double getValueChange() {
 		return valueChange;
 	}
 
-	public void setValueChange(float valueChange) {
+	public void setValueChange(double valueChange) {
 		this.valueChange = valueChange;
 		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
-	public float getPercentChange() {
+	public double getPercentChange() {
 		return percentChange;
 	}
 
-	public void setPercentChange(float percentChange) {
+	public void setPercentChange(double percentChange) {
 		this.percentChange = percentChange;
 		fieldChangedList.add(FieldChanged.PERCENT_CHANGE);
 		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
-	public float getBuyPrice() {
+	public double getBuyPrice() {
 		return buyPrice;
 	}
 
-	public void setBuyPrice(float buyPrice) {
+	public void setBuyPrice(double buyPrice) {
 		this.buyPrice = buyPrice;
 		fieldChangedList.add(FieldChanged.BUY_PRICE);
 		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
-	public float getSellPrice() {
+	public double getSellPrice() {
 		return sellPrice;
 	}
 
-	public void setSellPrice(float sellPrice) {
+	public void setSellPrice(double sellPrice) {
 		this.sellPrice = sellPrice;
 		fieldChangedList.add(FieldChanged.SELL_PRICE);
 		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
-	public float getLastPrice() {
+	public double getLastPrice() {
 		return lastPrice;
 	}
 
-	public void setLastPrice(float lastPrice) {
+	public void setLastPrice(double lastPrice) {
 		this.lastPrice = lastPrice;
 		fieldChangedList.add(FieldChanged.LAST_PRICE);
 		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
-	public float getBuyVolume() {
+	public double getBuyVolume() {
 		return buyVolume;
 	}
 
-	public void setBuyVolume(float buyVolume) {
+	public void setBuyVolume(double buyVolume) {
 		this.buyVolume = buyVolume;
 		fieldChangedList.add(FieldChanged.BUY_VOLUME);
 		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
-	public float getSellVolume() {
+	public double getSellVolume() {
 		return sellVolume;
 	}
 
-	public void setSellVolume(float sellVolume) {
+	public void setSellVolume(double sellVolume) {
 		this.sellVolume = sellVolume;
 		fieldChangedList.add(FieldChanged.SELL_VOLUME);
 		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
-	public float getVolume() {
+	public double getVolume() {
 		return volume;
 	}
 
-	public void setVolume(float volume) {
+	public void setVolume(double volume) {
 		this.volume = volume;
 		fieldChangedList.add(FieldChanged.VOLUME);
 		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
-	public float getOpenPrice() {
+	public double getOpenPrice() {
 		return openPrice;
 	}
 
-	public void setOpenPrice(float openPrice) {
+	public void setOpenPrice(double openPrice) {
 		this.openPrice = openPrice;
 		fieldChangedList.add(FieldChanged.OPEN_PRICE);
 		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
-	public float getLowPrice() {
+	public double getLowPrice() {
 		return lowPrice;
 	}
 
-	public void setLowPrice(float lowPrice) {
+	public void setLowPrice(double lowPrice) {
 		this.lowPrice = lowPrice;
 		fieldChangedList.add(FieldChanged.LOW_PRICE);
 		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
-	public float getHighPrice() {
+	public double getHighPrice() {
 		return highPrice;
 	}
 
-	public void setHighPrice(float highPrice) {
+	public void setHighPrice(double highPrice) {
 		this.highPrice = highPrice;
 		fieldChangedList.add(FieldChanged.HIGH_PRICE);
 		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 
-	public float getValue() {
+	public double getValue() {
 		return value;
 	}
 
-	public void setValue(float value) {
+	public void setValue(double value) {
 		this.value = value;
 		fieldChangedList.add(FieldChanged.VALUE);
 		lastUpdate.setTimeInMillis(System.currentTimeMillis());
@@ -251,22 +251,22 @@ public class StockData {
 		lastUpdate.setTimeInMillis(System.currentTimeMillis());
 	}
 	
-	public float getSentiment() {
+	public double getSentiment() {
 		return sentiment;
 	}
 
 
-	public void setSentiment(float sentiment) {
+	public void setSentiment(double sentiment) {
 		this.sentiment = sentiment;
 	}
 
 
-	public float getSentimentWeight() {
+	public double getSentimentWeight() {
 		return sentimentWeight;
 	}
 
 
-	public void setSentimentWeight(float sentimentWeight) {
+	public void setSentimentWeight(double sentimentWeight) {
 		this.sentimentWeight = sentimentWeight;
 	}
 
