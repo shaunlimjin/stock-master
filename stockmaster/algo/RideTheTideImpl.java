@@ -23,6 +23,8 @@ public class RideTheTideImpl extends TradingAlgorithm {
 	private static float PRICE_INCREASE = 5;
 	// Percentage price decrease from highest price to trigger SELL
 	private static float PRICE_DECREASE_FROM_HIGHEST_PRICE = 2;
+	// Minimum price we should monitor
+	private static float MINIMUM_PRICE = 5;
 
 	// stockCode, StockUnit pair
 	private Hashtable<String, StockUnit> stockList;
@@ -35,7 +37,6 @@ public class RideTheTideImpl extends TradingAlgorithm {
 	private void analyze(StockUnit stockUnit) {
 		long startTime = stockUnit.getStockData().getLastUpdate().getTime() - (long)TIME_PERIOD;
 
-		System.out.println(Log.formatDateTime(stockUnit.getStockData().getLastUpdate()));
 		// Retrieve price history of a stock
 		LinkedList<PriceTimeUnit> priceHistoryList = stockUnit.getPriceHistoryList();
 		Log.info(this, "Analyzing StockCode: " + stockUnit.getStockData().getStockCode() + " Price History Size: " + priceHistoryList.size());
@@ -51,11 +52,11 @@ public class RideTheTideImpl extends TradingAlgorithm {
 			if (isAlgoTesting) {
 				if (lastPrice-stockUnit.getBuyPrice() > 0) {
 					noOfProfit++;
-					//Log.algoTesting(this, "PROFIT: #### SELL: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") @ $" + lastPrice + " (BUY Price: " + stockUnit.getBuyPrice() + ", Profit: "+(lastPrice-stockUnit.getBuyPrice())+")");
+					Log.algoTesting(this, "PROFIT: #### SELL: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") @ $" + lastPrice + " (BUY Price: " + stockUnit.getBuyPrice() + ", Profit: "+(lastPrice-stockUnit.getBuyPrice())+")");
 				}
 				else {
 					noOfLoss++;
-					//Log.algoTesting(this, "LOSS: #### SELL: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") @ $" + lastPrice + " (BUY Price: " + stockUnit.getBuyPrice() + ", Profit: "+(lastPrice-stockUnit.getBuyPrice())+")");
+					Log.algoTesting(this, "LOSS: #### SELL: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") @ $" + lastPrice + " (BUY Price: " + stockUnit.getBuyPrice() + ", Profit: "+(lastPrice-stockUnit.getBuyPrice())+")");
 				}	
 			}
 		} // Check if we hit a new high
@@ -101,7 +102,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 
 		// we are only interested in price changes. we ignore all other changes
 		// (e.g. volume etc)
-		if (stockData.fieldChanged(StockData.FieldChanged.LAST_PRICE)) {
+		if (stockData.fieldChanged(StockData.FieldChanged.LAST_PRICE) && (stockData.getVolume() != 0) && (stockData.getLastPrice() > MINIMUM_PRICE)) {
 			StockUnit stockUnit;
 
 			if (stockList.containsKey(stockCode))
@@ -120,9 +121,14 @@ public class RideTheTideImpl extends TradingAlgorithm {
 	
 	// Prepare algo for test run
 	public void initAlgoTestParameters() {
-		algoTestParameters.put("TIME_PERIOD", new AlgoTestUnit(30000, 6*60000, 30000));
-		algoTestParameters.put("PRICE_INCREASE", new AlgoTestUnit(0.5f, 25, 0.5f));
-		algoTestParameters.put("PRICE_DECREASE_FROM_HIGHEST_PRICE", new AlgoTestUnit(1, 5, 0.5f));
+		//algoTestParameters.put("TIME_PERIOD", new AlgoTestUnit(30000, 6*60000, 30000));
+		//algoTestParameters.put("PRICE_INCREASE", new AlgoTestUnit(0.5f, 20, 0.5f));
+		//algoTestParameters.put("PRICE_DECREASE_FROM_HIGHEST_PRICE", new AlgoTestUnit(1, 4, 0.5f));
+		
+		algoTestParameters.put("TIME_PERIOD", new AlgoTestUnit(60000, 3*60000, 30000));
+		algoTestParameters.put("PRICE_INCREASE", new AlgoTestUnit(2, 15, 1));
+		algoTestParameters.put("PRICE_DECREASE_FROM_HIGHEST_PRICE", new AlgoTestUnit(1, 5, 1));
+		algoTestParameters.put("MINIMUM_PRICE", new AlgoTestUnit(0.1f, 1, 0.1f));
 	}
 	
 	// Entity class to track the price history of a stock. we need this
@@ -203,6 +209,27 @@ public class RideTheTideImpl extends TradingAlgorithm {
 
 	@Override
 	public void reset() {
+		
+		int openAtProfit = 0;
+		int openAtLoss = 0;
+		int openAtNeutral = 0;
+		
+		for (StockUnit stockUnit : stockList.values()) {
+			if (stockUnit.position > 0) {
+				Log.algoTesting(this, "### OPEN: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") (BUY Price: " + stockUnit.getBuyPrice() + ", Closed at: "+(stockUnit.getStockData().getLastPrice())+", Profit: "+(stockUnit.getStockData().getLastPrice()-stockUnit.getBuyPrice())+")");
+		
+				if (stockUnit.getStockData().getLastPrice()-stockUnit.getBuyPrice() > 0)
+					openAtProfit++;
+				else if (stockUnit.getStockData().getLastPrice()-stockUnit.getBuyPrice() == 0)
+					openAtNeutral++;
+				else 
+					openAtLoss++;
+					
+			}
+		}
+		
+		Log.algoTesting(this, "### OPEN AND PROFIT: "+openAtProfit+", OPEN AND NEUTRAL: "+openAtNeutral+", OPEN AND LOSS: "+openAtLoss);
+		
 		stockList.clear();
 	}
 }
