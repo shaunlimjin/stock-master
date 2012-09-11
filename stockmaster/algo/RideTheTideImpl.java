@@ -4,8 +4,10 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 
 import stockmaster.StockMaster;
+import stockmaster.unit.PriceTimeUnit;
 import stockmaster.unit.StockData;
 import stockmaster.util.Log;
+import stockmaster.unit.StockUnit;
 
 /*
  * Ride The Tide Algorithm
@@ -26,12 +28,9 @@ public class RideTheTideImpl extends TradingAlgorithm {
 	// Minimum price we should monitor
 	private static double MINIMUM_PRICE = 5;
 
-	// stockCode, StockUnit pair
-	private Hashtable<String, StockUnit> stockList;
-
 	public RideTheTideImpl(StockMaster stockManager) {
 		super(stockManager, 20000);
-		stockList = new Hashtable<String, StockUnit>();
+
 	}
 	
 	private void analyze(StockUnit stockUnit) {
@@ -45,9 +44,9 @@ public class RideTheTideImpl extends TradingAlgorithm {
 		double highestPrice = stockUnit.getHighestPrice();
 
 		// Check if we need to SELL
-		if ((stockUnit.position > 0) && (highestPrice * ((100 - PRICE_DECREASE_FROM_HIGHEST_PRICE) / 100) > lastPrice)) {
+		if ((stockUnit.getPosition() > 0) && (highestPrice * ((100 - PRICE_DECREASE_FROM_HIGHEST_PRICE) / 100) > lastPrice)) {
 			Log.info(this, "#### SELL: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") @ $" + lastPrice + " (BUY Price: " + stockUnit.getBuyPrice() + ", Profit: "+(lastPrice-stockUnit.getBuyPrice())+")");
-			stockUnit.position = 0;
+			stockUnit.setPosition(0);
 			
 			if (isAlgoTesting) {
 				if (lastPrice-stockUnit.getBuyPrice() > 0) {
@@ -60,28 +59,28 @@ public class RideTheTideImpl extends TradingAlgorithm {
 				}	
 			}
 		} // Check if we hit a new high
-		else if ((stockUnit.position > 0) && (lastPrice > highestPrice)) {
+		else if ((stockUnit.getPosition() > 0) && (lastPrice > highestPrice)) {
 			stockUnit.setHighestPrice(lastPrice);
 		} // Check if we need to BUY
 		else {
 			// Check if price has increased by x% in y time
 			for (PriceTimeUnit unit : priceHistoryList) {
-				Log.debug(this, "[Price History] Time/Price: " + unit.time + "/" + unit.price);
+				Log.debug(this, "[Price History] Time/Price: " + unit.getTime() + "/" + unit.getPrice());
 				
 				// Check what is the current time vs the last recorded time
-				if (startTime < unit.time) {
+				if (startTime < unit.getTime()) {
 					// compare current price with startTime price - check if it
 					// exceeds x%
-					double percentageChange = 100 * (priceHistoryList.getFirst().price - unit.price) / unit.price;
-					Log.info(this, "[Price History] Percentage Change: " + percentageChange + " (Current Price: " + priceHistoryList.getFirst().price + " Start Price: " + unit.price + ")");
+					double percentageChange = 100 * (priceHistoryList.getFirst().getPrice() - unit.getPrice()) / unit.getPrice();
+					Log.info(this, "[Price History] Percentage Change: " + percentageChange + " (Current Price: " + priceHistoryList.getFirst().getPrice() + " Start Price: " + unit.getPrice() + ")");
 				
 					// decide whether or not to BUY - stock must increase by x%
 					// over specified time
-					if ((percentageChange >= PRICE_INCREASE) && (stockUnit.position == 0)) {
-						Log.info(this, "#### BUY: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") @ $" + lastPrice + "(Start Price: " + unit.price + ")");
+					if ((percentageChange >= PRICE_INCREASE) && (stockUnit.getPosition() == 0)) {
+						Log.info(this, "#### BUY: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") @ $" + lastPrice + "(Start Price: " + unit.getPrice() + ")");
 						stockUnit.setBuyPrice(lastPrice);
 						stockUnit.setHighestPrice(lastPrice);
-						stockUnit.position = 1;
+						stockUnit.setPosition(1);
 						
 	
 					}
@@ -131,81 +130,6 @@ public class RideTheTideImpl extends TradingAlgorithm {
 		algoTestParameters.put("MINIMUM_PRICE", new AlgoTestUnit(0.1f, 1, 0.1f));
 	}
 	
-	// Entity class to track the price history of a stock. we need this
-	// information to calculate percentage difference
-	class StockUnit {
-		private LinkedList<PriceTimeUnit> priceHistoryList;
-		private StockData stockData;
-		private double highestPrice;
-		private double buyPrice;
-		private int position;
-
-		public StockUnit(StockData stockData) {
-			priceHistoryList = new LinkedList<PriceTimeUnit>();
-			this.stockData = stockData;
-		}
-
-		public LinkedList<PriceTimeUnit> getPriceHistoryList() {
-			return priceHistoryList;
-		}
-
-		public void setPriceHistoryList(LinkedList<PriceTimeUnit> priceHistoryList) {
-			this.priceHistoryList = priceHistoryList;
-		}
-
-		public StockData getStockData() {
-			return stockData;
-		}
-
-		public void setStockData(StockData stockData) {
-			this.stockData = stockData;
-		}
-
-		public int getPosition() {
-			return position;
-		}
-
-		public double getBuyPrice() {
-			return buyPrice;
-		}
-
-		public void setBuyPrice(double price) {
-			buyPrice = price;
-		}
-
-		public void setHighestPrice(double price) {
-			highestPrice = price;
-		}
-
-		public double getHighestPrice() {
-			return highestPrice;
-		}
-
-		public void setPosition(int position) {
-			this.position = position;
-		}
-
-		public void addInPriceList(double price, long time) {
-			PriceTimeUnit unit;
-
-			if (priceHistoryList.size() == PRICE_TIME_UNIT_QUEUE_SIZE) {
-				Log.debug(this, "PriceHistoryList is full. Removing oldest entry");
-				unit = priceHistoryList.removeLast();
-			} else
-				unit = new PriceTimeUnit();
-
-			unit.price = price;
-			unit.time = time;
-
-			priceHistoryList.addFirst(unit);
-			Log.debug(this, "Added PriceTimeUnit to priceHistoryList (Size: " + priceHistoryList.size() + ")");
-		}
-	}
-
-	class PriceTimeUnit {
-		double price;
-		long time;
-	}
 
 	@Override
 	public void reset() {
@@ -215,7 +139,7 @@ public class RideTheTideImpl extends TradingAlgorithm {
 		int openAtNeutral = 0;
 		
 		for (StockUnit stockUnit : stockList.values()) {
-			if (stockUnit.position > 0) {
+			if (stockUnit.getPosition() > 0) {
 				Log.algoTesting(this, "### OPEN: " + stockUnit.getStockData().getStockCode() + " (" + stockUnit.getStockData().getStockName() + ") (BUY Price: " + stockUnit.getBuyPrice() + ", Closed at: "+(stockUnit.getStockData().getLastPrice())+", Profit: "+(stockUnit.getStockData().getLastPrice()-stockUnit.getBuyPrice())+")");
 		
 				if (stockUnit.getStockData().getLastPrice()-stockUnit.getBuyPrice() > 0)

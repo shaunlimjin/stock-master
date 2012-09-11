@@ -17,13 +17,14 @@ public class MarketDataManager {
 	private ArrayList<MarketData> marketDataList;
 	private ArrayList<TradingAlgorithm> algoList;
 	private ArrayList<DataRecorder>  recorderList;
+	private MarketData liveMarketData;
 	
 	public MarketDataManager() {
 	
 		marketDataList = new ArrayList<>();
 		algoList = new ArrayList<>();
 		recorderList = new ArrayList<>();
-		
+		init();
 	}
 	
 	protected void addMarketData(MarketData marketData){
@@ -61,6 +62,14 @@ public class MarketDataManager {
 		}
 	}
 	
+	public MarketData getLiveMarketData() {
+		return liveMarketData;
+	}
+
+	public void setLiveMarketData(MarketData liveMarketData) {
+		this.liveMarketData = liveMarketData;
+	}
+
 	//Area to add all required Market Data preparation logic
 	protected void init(){
 		
@@ -79,11 +88,9 @@ public class MarketDataManager {
 				//addMarketData(rplData);
 				
 				
-		//SGXWebMarketDataImpl init
-				SGXWebMarketDataImpl sgxData = new SGXWebMarketDataImpl(rplData.getMarketDataInfo());
-				//loadAlgos(sgxData);
-				loadRecorders(sgxData);
-				addMarketData(sgxData);
+		//Final executing market data should be new using liveMarketData
+				setLiveMarketData(new SGXWebMarketDataImpl(rplData.getMarketDataInfo()));			
+				addMarketData(getLiveMarketData());
 				
 				
 	}
@@ -91,7 +98,8 @@ public class MarketDataManager {
 	
 	
 	public void execute(){
-		init();
+		loadAlgos(getLiveMarketData());
+		loadRecorders(getLiveMarketData());
 		for(MarketData data : marketDataList){
 		data.start();	
 		}

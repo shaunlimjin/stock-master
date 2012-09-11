@@ -7,6 +7,7 @@ import stockmaster.StockMaster;
 import stockmaster.manager.RiskManager;
 import stockmaster.marketdata.MarketData;
 import stockmaster.marketdata.MarketDataSubscriber;
+import stockmaster.unit.StockUnit;
 import stockmaster.util.Log;
 
 /*
@@ -24,6 +25,9 @@ public abstract class TradingAlgorithm implements MarketDataSubscriber {
 	protected int noOfProfit;
 	protected int noOfLoss;
 	protected Hashtable<String, AlgoTestUnit> algoTestParameters;
+	
+	// stockCode, StockUnit pair
+	protected Hashtable<String, StockUnit > stockList;
 
 	// Automatically subscribes to a particular MarketData for stock changes
 	public TradingAlgorithm(StockMaster stockManager, int refreshTime) {
@@ -31,8 +35,8 @@ public abstract class TradingAlgorithm implements MarketDataSubscriber {
 		algoTestParameters = new Hashtable<String, AlgoTestUnit>();
 
 		riskManager = RiskManager.getInstance();
-	//	stockManager.getMarketDataManager().setRefreshTime(refreshTime);
-		stockManager.getMarketDataManager().loadAlgo(this);
+	    stockManager.getMarketDataManager().getLiveMarketData().setRefreshTime(refreshTime);
+		stockList = stockManager.getMarketDataManager().getLiveMarketData().getMarketDataInfo().getStockList();
 	}
 
 	public void executeBuy(String stockCode, double price) {

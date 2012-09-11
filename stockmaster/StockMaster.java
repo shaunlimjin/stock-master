@@ -52,12 +52,12 @@ public class StockMaster {
     
 		//Define recorder to use with marketData
 		//Datetime format yyyyMMdd hh:mm:ss 
-		stockMaster.getMarketDataManager().loadRecorder(new CSVFileRecorderImpl("", "SGX", Log.getFormattedDateTime("20120911 00:00:00"), Log.getFormattedDateTime("20120911 23:59:59")));
+		//stockMaster.getMarketDataManager().loadRecorder(new CSVFileRecorderImpl("", "SGX", Log.getFormattedDateTime("20120911 00:00:00"), Log.getFormattedDateTime("20120911 23:59:59")));
 		//stockMaster.getMarketDataManager().loadRecorder("sgx", Log.getFormattedDateTime("20120904 08:58:00"), Log.getFormattedDateTime("20120917 17:05:00")));
 		
 		// Define algorithm stock manager would use to monitor the market
-       // stockMaster.getMarketDataManager().loadAlgo(new RideTheTideImpl(stockMaster));	
-        stockMaster.start();
+         stockMaster.getMarketDataManager().loadAlgo(new RideTheTideImpl(stockMaster));	
+         stockMaster.start();
 
         /**
          * sample:
