@@ -22,6 +22,9 @@ public class MongoRecorderImpl extends DataRecorder {
 
     private MongoManager mongoManager = MongoManager.getInstance();
 
+    //market name to be used as name of collection
+    private String market;
+
     /**
      * Constructor.
      * @param market Market to record. Will be used as collection name.
@@ -30,12 +33,12 @@ public class MongoRecorderImpl extends DataRecorder {
      */
     public MongoRecorderImpl(String market, Date startDate, Date endDate) {
     	super(startDate, endDate);
-        mongoManager.setCollection(market);
+        this.market = market;
     }
 
     @Override
     protected void record(StockData data) {
         Log.info(this, "Writing to Mongo stock " + data.getStockName() + " | last price: " + data.getLastPrice());
-        mongoManager.saveStockData(data);
+        mongoManager.saveStockData(data, market);
     }
 }

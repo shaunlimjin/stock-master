@@ -39,8 +39,6 @@ public class ReplayMongoMarketDataImpl extends MarketData {
 
     @Override
     public void populateData() {
-        mongoManager.setCollection(collectionName);
-
         //Specifying that records returned should be greater than startDate and less than endDate
         BasicDBObject query = new BasicDBObject();
         query.put("lastUpdate", new BasicDBObject("$gte", startDate).append("$lte", endDate));
@@ -48,7 +46,7 @@ public class ReplayMongoMarketDataImpl extends MarketData {
         Log.info(this, "MongoDB Query String: " + query.toString());
 
         DBCursor cursor;
-        cursor = mongoManager.getCollection().find(query);
+        cursor = mongoManager.getDatabase().getCollection(collectionName).find(query);
 
         try {
             while (cursor.hasNext()) {
