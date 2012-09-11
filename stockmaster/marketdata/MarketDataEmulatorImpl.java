@@ -1,5 +1,6 @@
 package stockmaster.marketdata;
 
+import stockmaster.unit.MarketDataInfo;
 import stockmaster.unit.StockData;
 import stockmaster.util.Log;
 
@@ -20,8 +21,8 @@ public class MarketDataEmulatorImpl extends MarketData {
 		BULL, BEAR, NEUTRAL;
 	}
 	
-	public MarketDataEmulatorImpl(Market marketSentiment) {
-		super();
+	public MarketDataEmulatorImpl(Market marketSentiment, MarketDataInfo marketDataInfo) {
+		super(DEFAULT_REFRESH_TIME,DEFAULT_EVENT_TIMEOUT, marketDataInfo);
 		this.marketSentiment = marketSentiment;
 	}
 	
@@ -33,7 +34,7 @@ public class MarketDataEmulatorImpl extends MarketData {
 		
 		for (int i = 0; i < noOfStockUpdates; i++) {
 			String stockCode = ((int)(Math.random()*GENERATE_NUMBER_OF_STOCKS))+"";
-			StockData stockData = marketData.get(stockCode);
+			StockData stockData = getMarketDataInfo().getMarketData().get(stockCode);
 			
 			double price = 0;
 			
@@ -83,7 +84,7 @@ public class MarketDataEmulatorImpl extends MarketData {
 		// Create dummy stockData
 		for (int i = 0; i < GENERATE_NUMBER_OF_STOCKS; i++) {
 			stockData = new StockData();
-			marketData.put(i+"", stockData);
+			getMarketDataInfo().getMarketData().put(i+"", stockData);
 			
 			stockData.setStockCode(i+"");
 			stockData.setStockName(i+"");

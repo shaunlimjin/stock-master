@@ -31,8 +31,8 @@ public abstract class TradingAlgorithm implements MarketDataSubscriber {
 		algoTestParameters = new Hashtable<String, AlgoTestUnit>();
 
 		riskManager = RiskManager.getInstance();
-		stockManager.getMarketData().setRefreshTime(refreshTime);
-		stockManager.getMarketData().subscribe(this);
+	//	stockManager.getMarketDataManager().setRefreshTime(refreshTime);
+		stockManager.getMarketDataManager().loadAlgo(this);
 	}
 
 	public void executeBuy(String stockCode, double price) {
@@ -77,7 +77,7 @@ public abstract class TradingAlgorithm implements MarketDataSubscriber {
 				for (String fieldName : algoTestParameters.keySet()) {
 					Log.algoTesting(this, fieldName+":"+algoTestParameters.get(fieldName).ALGO_FIELD.getDouble(this));
 				}	
-				stockManager.getMarketData().start();
+				stockManager.getMarketDataManager().execute();
 				
 				Log.algoTesting(this, "Profit: "+noOfProfit+" Loss: "+noOfLoss);
 				

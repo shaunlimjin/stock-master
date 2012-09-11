@@ -1,5 +1,6 @@
 package stockmaster.marketdata;
 
+import stockmaster.unit.MarketDataInfo;
 import stockmaster.unit.StockData;
 import stockmaster.util.Log;
 import java.util.ArrayList;
@@ -15,10 +16,11 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 	private String[] itemList;
 	private ArrayList<String> fileList;
 	
-	public ReplayCSVMarketDataImpl(String folder, ArrayList<String> date, String market) {
+	public ReplayCSVMarketDataImpl(String folder, ArrayList<String> date, String market, MarketDataInfo marketDataInfo) {
 		fileList = date;
 		selectedMarket = market;
 		selectedFolder = folder;
+		this.setMarketDataInfo(marketDataInfo);
 	}
 
 	public ReplayCSVMarketDataImpl() {
@@ -35,17 +37,17 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 			while((line = reader.readLine())!=null){			
 				itemList = line.split(",");
                 //if stock does not already exist in marketData's hashtable, put it there.
-				if(!marketData.containsKey(itemList[11])){
+				if(!getMarketDataInfo().getMarketData().containsKey(itemList[11])){
 					stockData = new StockData();
 					stockData.setStockCode(itemList[11]);
 					stockData.setStockName(itemList[12]);
 			
 					//Log.debug(this, stockData.toString());
-					marketData.put(stockData.getStockCode(), stockData);															
+					getMarketDataInfo().getMarketData().put(stockData.getStockCode(), stockData);															
 				}
 				
 				
-					stockData = marketData.get(itemList[11]);
+					stockData = getMarketDataInfo().getMarketData().get(itemList[11]);
 					stockData.clearFieldChangedList();
 					
 					doubleValue = Double.parseDouble(itemList[0]);
@@ -195,7 +197,7 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 				freader = new FileReader(dataFile);
 				reader = new BufferedReader(freader);
 				
-				marketData.clear();
+				//getMarketDataInfo().getMarketData().clear();
 			}catch (Exception e)
 			{
 				e.printStackTrace();

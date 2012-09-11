@@ -2,6 +2,7 @@ package stockmaster.marketdata;
 
 import com.mongodb.*;
 import stockmaster.db.MongoManager;
+import stockmaster.unit.MarketDataInfo;
 import stockmaster.unit.StockData;
 import stockmaster.util.Log;
 
@@ -31,10 +32,15 @@ public class ReplayMongoMarketDataImpl extends MarketData {
      * @param startDate Start Date
      * @param endDate   End Date
      */
-    public ReplayMongoMarketDataImpl(String market, Date startDate, Date endDate) {
+    public ReplayMongoMarketDataImpl(String market, Date startDate, Date endDate, MarketDataInfo marketDataInfo) {
         this.collectionName = market;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.setMarketDataInfo(marketDataInfo);
+    }
+    
+    public ReplayMongoMarketDataImpl(){
+    	super();
     }
 
     @Override
@@ -57,16 +63,16 @@ public class ReplayMongoMarketDataImpl extends MarketData {
                 String stockCode = (String) object.get("stockCode");
 
                 //if stock does not already exist in marketData's hashtable, put it there.
-                if (!marketData.containsKey(stockCode)) {
+                if (!getMarketDataInfo().getMarketData().containsKey(stockCode)) {
                     stockData = new StockData();
                     stockData.setStockCode(stockCode);
                     stockData.setStockName((String) object.get("stockName"));
 
-                    marketData.put(stockData.getStockCode(), stockData);
+                    getMarketDataInfo().getMarketData().put(stockData.getStockCode(), stockData);
                 }
 
                 //if stock exists, retrieve from hashtable
-                stockData = marketData.get(stockCode);
+                stockData = getMarketDataInfo().getMarketData().get(stockCode);
                 stockData.clearFieldChangedList();
 
                 stockData.setValueChange((Double) object.get("valueChange"));

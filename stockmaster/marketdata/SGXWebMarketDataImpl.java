@@ -9,6 +9,7 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 
+import stockmaster.unit.MarketDataInfo;
 import stockmaster.unit.StockData;
 import stockmaster.util.Log;
 
@@ -24,9 +25,10 @@ public class SGXWebMarketDataImpl extends MarketData {
 	private JsonFactory jsonFactory;
 	private JsonParser jsonParser;
 
-	public SGXWebMarketDataImpl() {
-		super(REFRESH_TIME, EVENT_TIMEOUT);
+	public SGXWebMarketDataImpl(MarketDataInfo marketDataInfo) {
+		super(REFRESH_TIME, EVENT_TIMEOUT, marketDataInfo);
 	}
+	
 
 	public void init() {
 		try {
@@ -75,9 +77,9 @@ public class SGXWebMarketDataImpl extends MarketData {
 				StockData stock;
 
 				// if stock already exist, update prices only
-				if (marketData.containsKey(stockCode)) {
+				if (getMarketDataInfo().getMarketData().containsKey(stockCode)) {
 					Log.debug(this, stockCode + " already exist. Retrieving record..");
-					stock = marketData.get(stockCode);
+					stock = getMarketDataInfo().getMarketData().get(stockCode);
 					stock.clearFieldChangedList(); // we will be re-populating
 													// updated field list
 				} else { // create new stock object and populate all fields
@@ -85,7 +87,7 @@ public class SGXWebMarketDataImpl extends MarketData {
 					stock = new StockData();
 					stock.setStockName(stockName);
 					stock.setStockCode(stockCode);
-					marketData.put(stockCode, stock);
+					getMarketDataInfo().getMarketData().put(stockCode, stock);
 				}
 
 				// traverse an item
@@ -362,7 +364,7 @@ public class SGXWebMarketDataImpl extends MarketData {
 			Log.error(this, e.toString());
 		}
 
-		Log.debug(this, "Stock list size: " + marketData.size());
+		Log.debug(this, "Stock list size: " + getMarketDataInfo().getMarketData().size());
 	}
 
 	// Utility method to move to value instead of field followed by value.
