@@ -23,7 +23,7 @@ public class MarketDataManager {
 		marketDataList = new ArrayList<>();
 		algoList = new ArrayList<>();
 		recorderList = new ArrayList<>();
-		init();
+		
 	}
 	
 	protected void addMarketData(MarketData marketData){
@@ -76,13 +76,13 @@ public class MarketDataManager {
 				ArrayList<String> dateList = new ArrayList<String>();
 				dateList.add("20120904");
 				ReplayCSVMarketDataImpl rplData = new ReplayCSVMarketDataImpl("FeedData//", dateList, "SGX", new MarketDataInfo());
-				addMarketData(rplData);
+				//addMarketData(rplData);
 				
 				
 		//SGXWebMarketDataImpl init
 				SGXWebMarketDataImpl sgxData = new SGXWebMarketDataImpl(rplData.getMarketDataInfo());
 				//loadAlgos(sgxData);
-				//loadRecorders(sgxData)''
+				loadRecorders(sgxData);
 				addMarketData(sgxData);
 				
 				
@@ -91,7 +91,7 @@ public class MarketDataManager {
 	
 	
 	public void execute(){
-
+		init();
 		for(MarketData data : marketDataList){
 		data.start();	
 		}
