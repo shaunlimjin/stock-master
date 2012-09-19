@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Log {
@@ -107,6 +108,10 @@ public class Log {
 	
 	public static String formatDateTime(Date date) {
 		return dateTimeFormat.format(date);
+	}
+	
+	public static String formatDateTime(Calendar date) {
+		return dateOnlyFormat.format(date.getTime());
 	}
 	
 	public static Date getFormattedDateTime(String date){

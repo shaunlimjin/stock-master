@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import stockmaster.algo.RideTheTideImpl;
 import stockmaster.algo.TradingAlgorithm;
+import stockmaster.manager.CSVSGXMarketDataManagerImpl;
 import stockmaster.manager.MarketDataManager;
 import stockmaster.marketdata.*;
 import stockmaster.recorder.CSVFileRecorderImpl;
@@ -28,7 +29,7 @@ public class AlgoTester extends StockMaster {
 		dateList.add("20120904");
 	
 		// Starts the application using Replayer SGX Web Market Data
-        StockMaster stockMaster = new StockMaster(new MarketDataManager());
+        StockMaster stockMaster = new StockMaster(new CSVSGXMarketDataManagerImpl());
 
 		// Define algorithm stock manager would use to monitor the market
         RideTheTideImpl rideTheTideAlgo = new RideTheTideImpl(stockMaster);

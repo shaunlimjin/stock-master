@@ -187,11 +187,11 @@ public class ReplayCSVMarketDataImpl extends MarketData {
 	
 	@Override
 	public void start(){
-		Log.debug(this, "Starting market data..");
+		Log.info(this, "Starting market data..");
 		init();
 		
 		for(String selectedDate: fileList){
-			
+			Log.info(this, "Loading data from csv file for " + selectedDate);
 			try{
 				dataFile = new File(selectedFolder + "/" + selectedDate + "_" + selectedMarket + ".csv");
 				freader = new FileReader(dataFile);

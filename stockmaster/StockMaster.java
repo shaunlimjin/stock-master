@@ -1,10 +1,13 @@
 package stockmaster;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import stockmaster.algo.RideTheTideImpl;
 import stockmaster.algo.TradingAlgorithm;
+import stockmaster.manager.CSVSGXMarketDataManagerImpl;
 import stockmaster.manager.MarketDataManager;
 import stockmaster.manager.PortfolioManager;
 import stockmaster.marketdata.*;
@@ -46,9 +49,12 @@ public class StockMaster {
 	public static void main(String[] args) {
 		Log.logLevel = LOG_LEVEL;
 		System.out.println("Starting StockMaster in "+Log.logLevel+" mode.");
+		Calendar startDate, endDate;
+		startDate = new GregorianCalendar(2012, 8, 3);
+		endDate = new GregorianCalendar(2012, 8, 4);
 		
-		// Starts the application using SGX Web Market Data 
-		StockMaster stockMaster = new StockMaster(new MarketDataManager());
+		// Starts the application using csv files for preloading and sgx market as live market
+		StockMaster stockMaster = new StockMaster(new CSVSGXMarketDataManagerImpl(startDate, endDate));
     
 		//Define recorder to use with marketData
 		//Datetime format yyyyMMdd hh:mm:ss 
